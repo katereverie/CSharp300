@@ -5,20 +5,21 @@ namespace AirportLockerRental.UI.Storage
 {
     public class ArrayLockerRepository : ILockerRepository
     {
-        public int Capacity { get; set; }
-        public LockerContents[] Lockers { get; set; }
+        private LockerContents[] _lockers;
 
+        public int Capacity { get; private set; }
+        
         public ArrayLockerRepository(int capacity)
         {
             Capacity = capacity;
-            Lockers = new LockerContents[capacity];
+            _lockers = new LockerContents[capacity];
         }
 
         public bool AddContents(LockerContents contents)
         {
             if (IsAvailable(contents.LockerNumber))
             {
-                Lockers[contents.LockerNumber - 1] = contents;
+                _lockers[contents.LockerNumber - 1] = contents;
                 return true;
             }
 
@@ -27,21 +28,21 @@ namespace AirportLockerRental.UI.Storage
 
         public LockerContents? GetLockerContents(int number)
         {
-            return Lockers[number - 1];
+            return _lockers[number - 1];
         }
 
         public bool IsAvailable(int number)
         {
-            return Lockers[number - 1] == null;
+            return _lockers[number - 1] == null;
         }
 
         public void ListContents()
         {
-            for (int i = 0; i < Lockers.Length; i++)
+            for (int i = 0; i < _lockers.Length; i++)
             {
-                if (Lockers[i] != null)
+                if (_lockers[i] != null)
                 {
-                    ConsoleIO.DisplayLockerContents(Lockers[i]);
+                    ConsoleIO.DisplayLockerContents(_lockers[i]);
                 }
 
             }
@@ -55,8 +56,8 @@ namespace AirportLockerRental.UI.Storage
             }
             else
             {
-                LockerContents contents = Lockers[number - 1];
-                Lockers[number - 1] = null;
+                LockerContents contents = _lockers[number - 1];
+                _lockers[number - 1] = null;
                 return contents;
             }
         }

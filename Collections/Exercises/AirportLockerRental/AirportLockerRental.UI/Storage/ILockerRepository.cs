@@ -4,7 +4,7 @@ namespace AirportLockerRental.UI.Storage
 {
     public interface ILockerRepository
     {
-        public int Capacity { get; set; }
+        public int Capacity { get; }
         void ListContents();
         LockerContents? GetLockerContents(int number);
         bool IsAvailable(int number);
