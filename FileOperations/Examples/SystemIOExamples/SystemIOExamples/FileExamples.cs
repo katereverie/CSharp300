@@ -9,7 +9,7 @@
         /// Demonstrates ReadAllLines() and Exists()
         /// </summary>
         public static void IceCreamReadAllLines()
-        {           
+        {
             if (File.Exists(PATH))
             {
                 string[] flavors = File.ReadAllLines(PATH);
