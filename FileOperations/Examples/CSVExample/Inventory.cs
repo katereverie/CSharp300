@@ -2,7 +2,7 @@
 {
     public class Inventory
     {
-        public string SKU { get; set; }
+        public string SKU { get; set; } 
         public string ProductName { get; set; }
         public int StockQty { get; set; }
         public decimal UnitPrice { get; set; }

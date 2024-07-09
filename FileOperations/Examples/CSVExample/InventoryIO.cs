@@ -4,6 +4,7 @@
     {
         private const string _filePath = "inventory.csv";
         private const string _headerRow = "SKU,ProductName,StockQty,UnitPrice,Rating,Notes";
+
         public InventoryIO()
         {
             if (!File.Exists(_filePath))
