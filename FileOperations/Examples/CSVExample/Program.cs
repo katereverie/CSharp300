@@ -1,7 +1,7 @@
 ﻿using CSVExample;
 
-Sample.AddData();
+//Sample.AddData();
 Sample.PrintContents();
 Sample.Update();
 Sample.PrintContents();
-Sample.Reset();
+//Sample.Reset();

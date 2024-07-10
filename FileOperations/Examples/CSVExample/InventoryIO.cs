@@ -66,6 +66,7 @@
             using(StreamWriter sw = new StreamWriter(_filePath))
             {
                 sw.WriteLine(_headerRow); // header
+                
                 foreach (var item in inventories)
                 {
                     sw.WriteLine($"{item.SKU},{item.ProductName},{item.StockQty},{item.UnitPrice},{item.Rating},{item.Notes}");
