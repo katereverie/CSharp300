@@ -1,20 +1,24 @@
-﻿namespace Hangman.UI
+﻿using Hangman.UI.Interfaces;
+
+
+namespace Hangman.UI
 {
     public class App
     {
-        public void SelectPlayer()
-        {
-            throw new NotImplementedException();
-        }
+        private IPlayer? _p1;
+        private IPlayer? _p2;
 
-        public void SelectWordSource()
+        public App()
         {
-            throw new NotImplementedException();
+            _p1 = PlayerFactory.InitializePlayer(1);
+            _p2 = PlayerFactory.InitializePlayer(2);
         }
 
         public void Run()
         {
-            throw new NotImplementedException();
+            // Default: Player 1 begins the first round
+
+            Console.WriteLine("Success.");
         }
     }
 }

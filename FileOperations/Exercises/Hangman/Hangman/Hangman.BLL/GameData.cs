@@ -2,10 +2,22 @@
 {
     public class GameData
     {
-        public Dictionary<string, int>? P1GuessRecord { get; private set; }
-        public Dictionary<string, int>? P2GuessRecord { get; private set; }
-        public string? Word { get; private set; }
+        public List<string> GuessRecord { get; set; }
+        public Dictionary<string, int> Player1Scores { get; set; }
+        public Dictionary<string, int> Player2Scores { get; set; }
+        public string? Word { get; set; }
 
-        public GameData() { }
+        public GameData(string p1Name, string p2Name)
+        {
+            GuessRecord = new List<string>();
+            Player1Scores = new Dictionary<string, int>
+            {
+                {p1Name, 0}
+            };
+            Player2Scores = new Dictionary<string, int>
+            {
+                {p2Name, 1}
+            };
+        }
     }
 }

@@ -7,11 +7,13 @@ namespace Hangman.UI.Players
     {
         public string Name { get; }
         public bool IsHuman { get; }
+        public IWordSource WordSource { get; }
 
         public ComputerPlayer(string name)
         {
             Name = name;
             IsHuman = false;
+            WordSource = new Dict();
         }
 
         public string GetGuess()
@@ -25,12 +27,6 @@ namespace Hangman.UI.Players
             }
 
             return $"{alphabet[letterPicker.Next(0, 26)]}";
-        }
-
-        public string? GetWord()
-        {
-            Dictionary dict = new Dictionary();
-            return dict.GetWord();
         }
     }
 }

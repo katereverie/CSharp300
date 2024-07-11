@@ -2,9 +2,9 @@
 {
     public interface IPlayer
     {
-        string? GetWord(); // not empty
-        string? GetGuess(); // not empty
-        string Name { get; } // not empty
-        bool IsHuman {  get; } // must be assigned
+        string Name { get; } 
+        bool IsHuman {  get; } 
+        IWordSource WordSource { get; }
+        string? GetGuess(); 
     }
 }

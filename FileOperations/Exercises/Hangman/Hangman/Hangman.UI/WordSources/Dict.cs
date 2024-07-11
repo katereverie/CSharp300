@@ -2,7 +2,7 @@
 
 namespace Hangman.UI.WordSources
 {
-    public class Dictionary : IWordSource
+    public class Dict : IWordSource
     {
         private Random _wordPicker = new Random();
 

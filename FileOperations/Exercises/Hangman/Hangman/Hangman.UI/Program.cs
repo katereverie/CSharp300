@@ -1,3 +1,4 @@
 ﻿using Hangman.UI;
 
-App.Run();
+App app = new App();
+app.Run();

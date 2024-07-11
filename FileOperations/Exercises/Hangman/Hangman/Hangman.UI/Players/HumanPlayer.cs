@@ -7,11 +7,13 @@ namespace Hangman.UI.Players
     {
         public string Name { get; }
         public bool IsHuman { get; }
+        public IWordSource WordSource { get; }
 
-        public HumanPlayer(string name)
+        public HumanPlayer(string name, IWordSource wordSource)
         {
             Name = name;
             IsHuman = true;
+            WordSource = wordSource;
         }
 
         public string GetGuess()
@@ -28,12 +30,6 @@ namespace Hangman.UI.Players
                 return guess;
             }
 
-        }
-
-        public string GetWord()
-        {
-            ConsoleIO pickWord = new ConsoleIO();
-            return pickWord.GetWord();
         }
     }
 }

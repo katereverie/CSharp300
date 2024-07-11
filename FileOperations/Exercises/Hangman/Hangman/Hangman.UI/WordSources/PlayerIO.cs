@@ -2,11 +2,10 @@
 
 namespace Hangman.UI.WordSources
 {
-    public class ConsoleIO : IWordSource
+    public class PlayerIO : IWordSource
     {
         public string GetWord()
         {
-            // what if the entered word is not common or misspelled?
             while (true)
             {
                 Console.Write("Enter Word: ");
