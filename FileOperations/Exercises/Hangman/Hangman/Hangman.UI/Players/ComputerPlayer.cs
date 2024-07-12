@@ -5,28 +5,44 @@ namespace Hangman.UI.Players
 {
     public class ComputerPlayer : IPlayer
     {
+        private static Random _letterPicker = new Random();
+        private static char[] _alphabet = new char[26];
+        private static List<char> _guessedLetter = new List<char>();
         public string Name { get; }
         public bool IsHuman { get; }
         public IWordSource WordSource { get; }
+        
 
         public ComputerPlayer(string name)
         {
             Name = name;
             IsHuman = false;
-            WordSource = new Dict();
+            WordSource = new DefaultDictionary();
+            for (int i = 0; i < 26; i++)
+            {
+                _alphabet[i] = (char)('A' + i);
+            }
         }
 
         public string GetGuess()
         {
-            char[] alphabet = new char[26];
-            Random letterPicker = new Random();
+            char guess;
 
-            for (int i = 0; i < 26; i++)
+            do
             {
-                alphabet[i] = (char)('A' + i);
-            }
+                guess = _alphabet[_letterPicker.Next(0, 26)];
 
-            return $"{alphabet[letterPicker.Next(0, 26)]}";
+                if (_guessedLetter.Contains(guess))
+                {
+                    continue;
+                }
+
+                _guessedLetter.Add(guess);
+
+                return guess.ToString();
+
+            } while (true);
+
         }
     }
 }
