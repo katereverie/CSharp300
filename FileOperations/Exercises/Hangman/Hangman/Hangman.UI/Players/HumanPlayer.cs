@@ -18,18 +18,7 @@ namespace Hangman.UI.Players
 
         public string GetGuess()
         {
-            while (true)
-            {
-                string? guess = Console.ReadLine();
-                if (string.IsNullOrWhiteSpace(guess))
-                {
-                    Console.WriteLine("Your guess mustn't be empty.");
-                    continue;
-                }
-
-                return guess;
-            }
-
+            return GameConsole.GetGuess();
         }
     }
 }
