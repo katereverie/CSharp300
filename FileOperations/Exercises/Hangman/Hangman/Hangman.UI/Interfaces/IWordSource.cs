@@ -2,6 +2,6 @@
 {
     public interface IWordSource
     {
-        string? GetWord();
+        string GetWord();
     }
 }
