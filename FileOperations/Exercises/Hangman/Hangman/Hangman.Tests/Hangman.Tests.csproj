@@ -12,4 +12,9 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Hangman.BLL\Hangman.BLL.csproj" />
+    <ProjectReference Include="..\Hangman.UI\Hangman.UI.csproj" />
+  </ItemGroup>
+
 </Project>
