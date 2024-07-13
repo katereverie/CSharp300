@@ -5,6 +5,6 @@
         string Name { get; } 
         bool IsHuman {  get; } 
         IWordSource WordSource { get; }
-        string? GetGuess(); 
+        string GetGuess(); 
     }
 }
