@@ -8,51 +8,20 @@ namespace Hangman.UI
     {
         private static readonly string[] _hangmanStages = 
         {
-            @"
-                -----
-                |   |
-                    |
-                    |
-                    |
-                    |
-                -----
-            ",
-            @"
-                -----
-                |   |
-                O   |
-                    |
-                    |
-                    |
-                -----
-            ",
-            @"
-                -----
-                |   |
-                O   |
-                |   |
-                    |
-                    |
-                -----
-            ",
-            @"
-                -----
-                |   |
-                O   |
-               /|\  |
-                    |
-                    |
-                -----
-            ",
-            @"
-                -----
-                |   |
-                O   |
-               /|\  |
-               / \  |
-                    |
-                -----
-            "
+            "\n----------\n    |    |\n         |\n         |\n         |\n         |\n----------\n",
+            "\n----------\n    |    |\n    O    |\n         |\n         |\n         |\n----------\n",
+            "\n----------\n    |    |\n    O    |\n    |    |\n         |\n         |\n----------\n",
+            "\n----------\n    |    |\n    O    |\n   /|\\   |\n         |\n         |\n----------\n",
+            "\n----------\n    |    |\n    O    |\n   /|\\   |\n   / \\   |\n         |\n----------\n",
+            "\n----------\n    |    |\n    X    |\n   /|\\   |\n   / \\   |\n         |\n----------\n",
+        };
+        private static readonly string[] _lines =
+        {
+            "All our times have come",
+            "Romeo and Juliet are together in eternity",
+            "We can be like they are",
+            "Seasons don't fear the Reaper, nor do the wind, the sun, or the rain",
+            "Come on baby, don't fear the Reaper.\n"
         };
 
         public static PlayerType GetPlayerType(int playerNumber)
@@ -174,11 +143,20 @@ namespace Hangman.UI
                     Console.Write("_ ");
                 }
             }
+
+            Console.WriteLine();
         }
 
-        public static void PrintStages(int strikesleft)
+        public static void PrintStages(int strikesLeft)
         {
-            Console.WriteLine(_hangmanStages[5 - strikesleft]);
+            int stageIndex = 5 - strikesLeft;
+            Console.WriteLine(_hangmanStages[stageIndex]);
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            for (int i = 0; i < stageIndex; i++)
+            {
+                Console.WriteLine(_lines[i]);
+            }
+            Console.ResetColor();
         }
 
         public static void AnyKey()
