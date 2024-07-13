@@ -86,8 +86,13 @@ namespace Hangman.UI
                             switch (state.StrikesLeft)
                             {
                                 case 0:
+                                    Console.Clear();
+                                    GameConsole.PrintStages(state.StrikesLeft);
                                     Console.WriteLine($"{WordGuesser.Name} has struck out, {WordPicker.Name} wins!");
-                                    Console.WriteLine($"The word was: {word}");
+                                    Console.Write("The word was: ");
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine(word);
+                                    Console.ResetColor();
                                     state.PlayerScores[WordPicker.Name]++;
                                     break;
                                 default:
