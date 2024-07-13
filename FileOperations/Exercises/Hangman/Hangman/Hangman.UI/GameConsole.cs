@@ -6,24 +6,77 @@ namespace Hangman.UI
 {
     public static class GameConsole
     {
+        private static readonly string[] _hangmanStages = 
+        {
+            @"
+                -----
+                |   |
+                    |
+                    |
+                    |
+                    |
+                -----
+            ",
+            @"
+                -----
+                |   |
+                O   |
+                    |
+                    |
+                    |
+                -----
+            ",
+            @"
+                -----
+                |   |
+                O   |
+                |   |
+                    |
+                    |
+                -----
+            ",
+            @"
+                -----
+                |   |
+                O   |
+               /|\  |
+                    |
+                    |
+                -----
+            ",
+            @"
+                -----
+                |   |
+                O   |
+               /|\  |
+               / \  |
+                    |
+                -----
+            "
+        };
+
         public static PlayerType GetPlayerType(int playerNumber)
         {
             do
             {
-                Console.Write($"\nChoose Player Type for Player {playerNumber}:\n1. Human\n2. Computer\nEnter 1 or 2: ");
+                Console.Write($"Choose Player Type for Player {playerNumber}:\n1. Human\n2. Computer\nEnter 1 for Human or 2 for Computer: ");
                 if (int.TryParse(Console.ReadLine(), out int playerType))
                 {
                     switch (playerType)
                     {
                         case 1:
+                            AnyKey();
                             return PlayerType.Human;
                         case 2:
+                            AnyKey();
                             return PlayerType.Computer;
                         default:
                             Console.WriteLine("Invalid Choice. Please enter either 1 or 2.");
                             continue;
                     }
                 }
+
+                Console.WriteLine("Invalid Input: Please enter either 1 or 2.");
 
             } while (true);
 
@@ -50,7 +103,7 @@ namespace Hangman.UI
 
         public static IWordSource GetWordSource(string playerName)
         {
-            Console.WriteLine($"{playerName}, Your life is out of your hands.\nBut, you may choose your last word.\n");
+            Console.WriteLine($"{playerName}, Your life is out of your hands.\nBut, you may choose your last words.\n");
             Console.WriteLine("1. My word, my choice.");
             Console.WriteLine("2. I surrender my choice to the God of Chance.\n");
 
@@ -76,7 +129,8 @@ namespace Hangman.UI
         {
             while (true)
             {
-                Console.Write("Enter Guess: ");
+                Console.Write("\nEnter Guess: ");
+
                 string? guess = Console.ReadLine();
 
                 if (string.IsNullOrEmpty(guess))
@@ -95,16 +149,17 @@ namespace Hangman.UI
                     continue;
                 }
 
-                return guess;
+                Console.WriteLine(guess);
+
+                return guess.ToLower();
             }
         }
 
-        public static void PrintGameState(GameState state)
+        public static void PrintGameState(GameState state, string? word)
         {
             Console.WriteLine($"Strikes remaining: {state.StrikesLeft}");
             Console.WriteLine($"Previous Guesses: {string.Join(",", state.GuessRecord)}\n");
             // as long as any previous guesses contain any letter of the word, print it out
-            string? word = state.Word;
             var guesses = state.GuessRecord;
 
             Console.Write("Word: ");
@@ -112,22 +167,30 @@ namespace Hangman.UI
             {
                 if (guesses.Contains(word[i].ToString()))
                 {
-                    Console.Write(word[i]);
+                    Console.Write(word[i] + " ");
                 }
-
-                Console.Write("- ");
+                else
+                {
+                    Console.Write("_ ");
+                }
             }
+        }
+
+        public static void PrintStages(int strikesleft)
+        {
+            Console.WriteLine(_hangmanStages[5 - strikesleft]);
         }
 
         public static void AnyKey()
         {
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
+            Console.Clear();
         }
 
         public static void PrintScores(Dictionary<string, int> playerScores)
         {
-            Console.WriteLine(new string('=', 10) + "Score Board" + new string('=', 10));
+            Console.WriteLine(new string('=', 10) + " Score Board " + new string('=', 10));
             foreach (var playerScore in playerScores)
             {
                 Console.WriteLine($"{playerScore.Key} - {playerScore.Value}");
@@ -146,6 +209,7 @@ namespace Hangman.UI
                     switch (answer)
                     {
                         case 'y':
+                            AnyKey();
                             return true;
                         case 'n':
                             return false;

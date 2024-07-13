@@ -38,26 +38,46 @@ namespace Hangman.UI
             // loop runs until player quits
             do
             {
-                Console.WriteLine($"{WordPicker.Name}, pick a word to guess. {WordGuesser.Name}, look away!\n");
-                state.Word = WordPicker.WordSource.GetWord();
+                switch (WordPicker.IsHuman)
+                {
+                    case true:
+                        Console.WriteLine($"{WordPicker.Name}, pick a word to guess. {WordGuesser.Name}, look away!\n");
+                        break;
+                    default:
+                        Console.WriteLine($"{WordPicker.Name} has picked a word.");
+                        break;
+                }
+                
+                string word = WordPicker.WordSource.GetWord()?? "";
+                string? guess = null;
+                int matchTotal = 0;
                 MatchResult? result = null;
-                Console.Clear();
+                GameConsole.AnyKey();
 
-                // loop runs until no strikes left or a full match has been found
+                // loop runs until no strikes left or a full match or match count equals to length of word has been found
                 do
                 {
-                    GameConsole.PrintGameState(state);
+                    GameConsole.PrintGameState(state, word);
+                    GameConsole.PrintStages(state.StrikesLeft);
 
-                    string guess = WordGuesser.GetGuess() ?? "empty";
-                    bool isDuplicate = mgr.CheckDuplicateGuess(state.GuessRecord, guess);
-                    if (isDuplicate)
+                    if (WordGuesser.IsHuman)
                     {
-                        Console.WriteLine("Invalid: duplicate guess.");
-                        continue;
+                        guess = WordGuesser.GetGuess();
+                        bool isDuplicate = mgr.CheckDuplicateGuess(state.GuessRecord, guess);
+                        if (isDuplicate)
+                        {
+                            Console.WriteLine("Invalid: duplicate guess.");
+                            GameConsole.AnyKey();
+                            continue;
+                        }
                     }
-                    result = mgr.CheckGuessMatch(state.Word, guess);
+                    else
+                    {
+                        guess = WordGuesser.GetGuess();
+                    }
+
+                    result = mgr.CheckGuessMatch(word, guess);
                     state.GuessRecord.Add(guess);
-                    Console.WriteLine(guess);
 
                     switch (result)
                     {
@@ -67,6 +87,7 @@ namespace Hangman.UI
                             {
                                 case 0:
                                     Console.WriteLine($"{WordGuesser.Name} has struck out, {WordPicker.Name} wins!");
+                                    Console.WriteLine($"The word was: {word}");
                                     state.PlayerScores[WordPicker.Name]++;
                                     break;
                                 default:
@@ -75,15 +96,16 @@ namespace Hangman.UI
                             }
                             break;
                         case MatchResult.PartialMatch:
-                            int count = 0;
-                            foreach (char letter in state.Word)
+                            int matchCount = 0;
+                            foreach (char letter in word)
                             {
                                 if (letter.ToString() == guess)
                                 {
-                                    count++;
+                                    matchCount++;
+                                    matchTotal++;
                                 }
                             }
-                            Console.WriteLine($"{count} matches!");
+                            Console.WriteLine($"{matchCount} matches!");
                             break;
                         default:
                             Console.WriteLine($"Congradulation! {WordGuesser.Name} won!");
@@ -92,9 +114,9 @@ namespace Hangman.UI
                     }
 
                     GameConsole.AnyKey();
-                    Console.Clear();
 
-                } while (state.StrikesLeft != 0 && result != MatchResult.FullMatch);
+                    // round continues until guesser either wins or loses
+                } while (!mgr.CheckGuesserWin(matchTotal, word.Length, result) && !mgr.CheckGuesserLose(state.StrikesLeft));
 
                 state.Reset();
                 WordGuesser = SwitchRole(WordGuesser);

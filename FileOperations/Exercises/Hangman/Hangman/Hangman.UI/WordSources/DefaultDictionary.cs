@@ -6,7 +6,7 @@ namespace Hangman.UI.WordSources
     {
         private Random _wordPicker = new Random();
 
-        public string GetWord()
+        public string? GetWord()
         {
             string path = @"D:\GitHub\CloneRepository\C#300\FileOperations\Exercises\Hangman\Hangman\Data\dictionary.txt";
 

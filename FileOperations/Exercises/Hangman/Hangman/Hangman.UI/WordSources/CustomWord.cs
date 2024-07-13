@@ -31,7 +31,7 @@ namespace Hangman.UI.WordSources
                     continue;
                 }
 
-                return word;
+                return word.ToLower();
             }
         }
     }

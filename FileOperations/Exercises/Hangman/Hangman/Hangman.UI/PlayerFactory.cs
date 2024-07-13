@@ -15,9 +15,12 @@ namespace Hangman.UI
             {
                 case PlayerType.Human:
                     playerWordSource = GameConsole.GetWordSource(playerName);
+                    Console.WriteLine($"{playerName}, You shall choose your own last words.");
+                    GameConsole.AnyKey();
                     return new HumanPlayer(playerName, playerWordSource);
                 default:
-                    Console.WriteLine($"The God of Chance will bless {playerName} with a destined word.");
+                    Console.WriteLine($"{playerName} shall receive a word from the God of Chance.");
+                    GameConsole.AnyKey();
                     return new ComputerPlayer(playerName);
             }
         }

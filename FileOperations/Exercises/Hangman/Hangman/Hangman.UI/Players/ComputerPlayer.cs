@@ -39,7 +39,8 @@ namespace Hangman.UI.Players
 
                 _guessedLetter.Add(guess);
 
-                return guess.ToString();
+                Console.WriteLine($"\n{Name}'s guess is: {guess.ToString().ToLower()}");
+                return guess.ToString().ToLower();
 
             } while (true);
 
