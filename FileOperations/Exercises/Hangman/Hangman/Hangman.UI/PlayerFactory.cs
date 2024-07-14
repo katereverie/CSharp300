@@ -19,7 +19,7 @@ namespace Hangman.UI
                     GameConsole.AnyKey();
                     return new HumanPlayer(playerName, playerWordSource);
                 default:
-                    Console.WriteLine($"{playerName} shall receive a word from the Hell Library.");
+                    Console.WriteLine($"{playerName} shall receive a word from the Hell Librarian.");
                     GameConsole.AnyKey();
                     return new ComputerPlayer(playerName);
             }
