@@ -4,6 +4,7 @@
     {
         public List<string> GuessRecord { get; set; } = new List<string>();
         public Dictionary<string, int> PlayerScores { get; set; }
+        public int Round { get; set; } = 0;
         public int StrikesLeft { get; set; } = 5;
 
         public GameState(string p1Name, string p2Name)
