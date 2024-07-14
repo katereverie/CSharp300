@@ -8,36 +8,37 @@ namespace Hangman.UI
     {
         private static readonly string[] _hangmanStages = 
         {
-            "\n----------\n    |    |\n         |\n         |\n         |\n         |\n----------\n",
-            "\n----------\n    |    |\n    O    |\n         |\n         |\n         |\n----------\n",
-            "\n----------\n    |    |\n    O    |\n    |    |\n         |\n         |\n----------\n",
-            "\n----------\n    |    |\n    O    |\n   /|\\   |\n         |\n         |\n----------\n",
-            "\n----------\n    |    |\n    O    |\n   /|\\   |\n   / \\   |\n         |\n----------\n",
-            "\n----------\n    |    |\n    X    |\n   /|\\   |\n   / \\   |\n         |\n----------\n",
+            "\n     ----------\n         |    |\n              |\n              |\n              |\n              |\n     ----------\n",
+            "\n     ----------\n         |    |\n         O    |\n              |\n              |\n              |\n     ----------\n",
+            "\n     ----------\n         |    |\n         O    |\n         |    |\n              |\n              |\n     ----------\n",
+            "\n     ----------\n         |    |\n         O    |\n        /|\\   |\n              |\n              |\n     ----------\n",
+            "\n     ----------\n         |    |\n         O    |\n        /|\\   |\n        / \\   |\n              |\n     ----------\n",
+            "\n     ----------\n         |    |\n         X    |\n        /|\\   |\n        / \\   |\n              |\n     ----------\n",
         };
         private static readonly string[] _lines =
         {
             "All our times have come",
-            "Romeo and Juliet are together in eternity",
-            "We can be like they are",
-            "Seasons don't fear the Reaper, nor do the wind, the sun, or the rain",
+            "Then the door was open and the wind appeared",
+            "The candles blew and then disappeared",
+            "The curtains flew and then he appeared",
+            "Saying don't be afraid",
             "Come on baby, don't fear the Reaper.\n"
         };
 
         public static PlayerType GetPlayerType(int playerNumber)
         {
+            Console.WriteLine("Welcome to Hangman!\n");
+
             do
             {
-                Console.Write($"Choose Player Type for Player {playerNumber}:\n1. Human\n2. Computer\nEnter 1 for Human or 2 for Computer: ");
+                Console.Write($"Choose Player Type for Player Nr.{playerNumber}:\n1. Human\n2. Computer\nPlease enter 1 or 2.\nYour choice:  ");
                 if (int.TryParse(Console.ReadLine(), out int playerType))
                 {
                     switch (playerType)
                     {
                         case 1:
-                            AnyKey();
                             return PlayerType.Human;
                         case 2:
-                            AnyKey();
                             return PlayerType.Computer;
                         default:
                             Console.WriteLine("Invalid Choice. Please enter either 1 or 2.");
@@ -55,7 +56,7 @@ namespace Hangman.UI
         {
             do
             {
-                Console.Write($"Enter Name for Player {playerNumber}: ");
+                Console.Write($"\nEnter Name for Player Nr.{playerNumber}: ");
                 string? playerName = Console.ReadLine()?.Trim();
 
                 if (string.IsNullOrEmpty(playerName))
@@ -72,9 +73,9 @@ namespace Hangman.UI
 
         public static IWordSource GetWordSource(string playerName)
         {
-            Console.WriteLine($"{playerName}, Your life is out of your hands.\nBut, you may choose your last words.\n");
+            Console.WriteLine($"\n{playerName}, Your life is out of your hands.\nBut, you may choose your last words.\n");
             Console.WriteLine("1. My word, my choice.");
-            Console.WriteLine("2. I surrender my choice to the God of Chance.\n");
+            Console.WriteLine("2. I surrender my choice to the Hell Librarian.\n");
 
             do
             {
@@ -102,7 +103,7 @@ namespace Hangman.UI
 
                 string? guess = Console.ReadLine();
 
-                if (string.IsNullOrEmpty(guess))
+                if (string.IsNullOrEmpty(guess) || string.IsNullOrWhiteSpace(guess))
                 {
                     Console.WriteLine("Invalid: Empty Guess.");
                     continue;
@@ -126,6 +127,7 @@ namespace Hangman.UI
 
         public static void PrintGameState(GameState state, string? word)
         {
+            Console.WriteLine($"{new string('=', 10)} Round {state.Round} {new string('=', 10)}");
             Console.WriteLine($"Strikes remaining: {state.StrikesLeft}");
             Console.WriteLine($"Previous Guesses: {string.Join(",", state.GuessRecord)}\n");
             // as long as any previous guesses contain any letter of the word, print it out
@@ -152,7 +154,7 @@ namespace Hangman.UI
             int stageIndex = 5 - strikesLeft;
             Console.WriteLine(_hangmanStages[stageIndex]);
             Console.ForegroundColor = ConsoleColor.DarkRed;
-            for (int i = 0; i < stageIndex; i++)
+            for (int i = 0; i <= stageIndex; i++)
             {
                 Console.WriteLine(_lines[i]);
             }

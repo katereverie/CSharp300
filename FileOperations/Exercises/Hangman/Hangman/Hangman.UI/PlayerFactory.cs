@@ -8,7 +8,7 @@ namespace Hangman.UI
         public static IPlayer InitializePlayer(int playerNumber)
         {
             PlayerType playerType = GameConsole.GetPlayerType(playerNumber);
-            string playerName = GameConsole.GetPlayerName(playerNumber);
+            string playerName = playerType == PlayerType.Computer ? "Grim Reaper" : GameConsole.GetPlayerName(playerNumber);
             IWordSource playerWordSource;
 
             switch (playerType)
@@ -19,7 +19,7 @@ namespace Hangman.UI
                     GameConsole.AnyKey();
                     return new HumanPlayer(playerName, playerWordSource);
                 default:
-                    Console.WriteLine($"{playerName} shall receive a word from the God of Chance.");
+                    Console.WriteLine($"{playerName} shall receive a word from the Hell Library.");
                     GameConsole.AnyKey();
                     return new ComputerPlayer(playerName);
             }

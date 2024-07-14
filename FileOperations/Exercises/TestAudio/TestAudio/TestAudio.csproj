@@ -11,8 +11,4 @@
     <PackageReference Include="NAudio" Version="2.2.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Hangman.BLL\Hangman.BLL.csproj" />
-  </ItemGroup>
-
 </Project>

@@ -1,7 +1,6 @@
 ﻿using Hangman.BLL;
 using Hangman.UI.Interfaces;
 
-
 namespace Hangman.UI
 {
     public class App
@@ -17,16 +16,19 @@ namespace Hangman.UI
 
         public IPlayer SwitchRole(IPlayer p)
         {
-            if (p == _p1)
-            {
-                return _p2;
-            }
-
-            return _p1;
+            return p == _p1 ? _p2 : _p1;
         }
 
         public void Run()
         {
+            // Run audio in a different thread
+            Thread audioThread = new Thread(Audio.Play);
+            audioThread.Start();
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("All our times have come.\n");
+            Console.ResetColor();
+
             /* initialize State object, StateManager object
              * assign WordPicker and WordGuesser
              */
@@ -41,14 +43,15 @@ namespace Hangman.UI
                 switch (WordPicker.IsHuman)
                 {
                     case true:
-                        Console.WriteLine($"{WordPicker.Name}, pick a word to guess. {WordGuesser.Name}, look away!\n");
+                        Console.WriteLine($"{WordPicker.Name}, pick a word to guess. {WordGuesser.Name} will look away!\n");
                         break;
                     default:
-                        Console.WriteLine($"{WordPicker.Name} has picked a word.");
+                        Console.WriteLine($"{WordPicker.Name} has received a word from the Hell Librarian.");
                         break;
                 }
-                
-                string word = WordPicker.WordSource.GetWord()?? "";
+
+                state.Round++;
+                string word = WordPicker.WordSource.GetWord() ?? "";
                 string? guess = null;
                 int matchTotal = 0;
                 MatchResult? result = null;
@@ -110,10 +113,10 @@ namespace Hangman.UI
                                     matchTotal++;
                                 }
                             }
-                            Console.WriteLine($"{matchCount} matches!");
+                            Console.WriteLine($"{matchCount} match(es)!");
                             break;
                         default:
-                            Console.WriteLine($"Congradulation! {WordGuesser.Name} won!");
+                            Console.WriteLine($"Congratulations! {WordGuesser.Name} won!");
                             state.PlayerScores[WordGuesser.Name]++;
                             break;
                     }
@@ -131,6 +134,8 @@ namespace Hangman.UI
 
             } while (GameConsole.Continue());
 
+            Audio.Stop();
+            audioThread.Join();
         }
     }
 }
