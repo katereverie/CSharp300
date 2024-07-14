@@ -9,15 +9,13 @@ namespace Hangman.UI.Players
         private static char[] _alphabet = new char[26];
         private static List<char> _guessedLetter = new List<char>();
         public string Name { get; }
-        public bool IsHuman { get; }
-        public IWordSource WordSource { get; }
+        public bool IsHuman { get; } = false;
+        public IWordSource WordSource { get; } = new DefaultDictionary();
         
 
         public ComputerPlayer(string name)
         {
             Name = name;
-            IsHuman = false;
-            WordSource = new DefaultDictionary();
             for (int i = 0; i < 26; i++)
             {
                 _alphabet[i] = (char)('A' + i);
