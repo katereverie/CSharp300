@@ -37,9 +37,14 @@ namespace Hangman.UI
             IPlayer WordPicker = _p1;
             IPlayer WordGuesser = _p2;
 
-            // loop runs until player quits
+            // round loop runs until player quits
             do
             {
+                state.Round++;
+                string? guess = null;
+                int matchTotal = 0;
+                MatchResult? result = null;
+                string word = WordPicker.WordSource.GetWord() ?? "";
                 switch (WordPicker.IsHuman)
                 {
                     case true:
@@ -50,14 +55,9 @@ namespace Hangman.UI
                         break;
                 }
 
-                state.Round++;
-                string word = WordPicker.WordSource.GetWord() ?? "";
-                string? guess = null;
-                int matchTotal = 0;
-                MatchResult? result = null;
                 GameConsole.AnyKey();
 
-                // loop runs until no strikes left or a full match or match count equals to length of word has been found
+                // guess loop runs until no strikes are left or a full match or match count equals to length of picked word
                 do
                 {
                     GameConsole.PrintGameState(state, word);
@@ -123,7 +123,7 @@ namespace Hangman.UI
 
                     GameConsole.AnyKey();
 
-                    // round continues until guesser either wins or loses
+                    // guess loop continues until guesser either wins or loses
                 } while (!mgr.CheckGuesserWin(matchTotal, word.Length, result) && !mgr.CheckGuesserLose(state.StrikesLeft));
 
                 state.Reset();
