@@ -16,10 +16,10 @@ quince
 raspberry
 strawberry
 tangerine
-ugli
+ugly
 vanilla
 watermelon
-xigua
+watermelon
 zucchini
 avocado
 carrot
