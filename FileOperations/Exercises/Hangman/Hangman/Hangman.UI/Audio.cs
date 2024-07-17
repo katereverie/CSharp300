@@ -4,7 +4,7 @@ namespace Hangman.UI
 {
     public static class Audio
     {
-        private static readonly string _path = @"D:\GitHub\CloneRepository\C#300\FileOperations\Exercises\Hangman\Hangman\Data\DontFearTheReaper.mp3";
+        private static readonly string _path = @"Data\DontFearTheReaper.mp3";
         private static WaveOutEvent? _outputDevice;
         private static AudioFileReader? _audioFile;
         private static bool _isPlaying;

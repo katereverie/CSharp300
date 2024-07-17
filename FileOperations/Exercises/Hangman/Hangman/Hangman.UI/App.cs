@@ -1,5 +1,5 @@
 ﻿using Hangman.BLL;
-using Hangman.UI.Interfaces;
+using Hangman.BLL.Interfaces;
 
 namespace Hangman.UI
 {
@@ -28,6 +28,8 @@ namespace Hangman.UI
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("All our times have come.\n");
             Console.ResetColor();
+            GameConsole.AnyKey();
+
 
             /* initialize State object, StateManager object
              * assign WordPicker and WordGuesser

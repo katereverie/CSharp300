@@ -1,4 +1,4 @@
-﻿using Hangman.UI.Interfaces;
+﻿using Hangman.BLL.Interfaces;
 
 namespace Hangman.UI.WordSources
 {

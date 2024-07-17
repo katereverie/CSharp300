@@ -1,5 +1,5 @@
 ﻿using Hangman.BLL;
-using Hangman.UI.Interfaces;
+using Hangman.BLL.Interfaces;
 using Hangman.UI.WordSources;
 
 namespace Hangman.UI

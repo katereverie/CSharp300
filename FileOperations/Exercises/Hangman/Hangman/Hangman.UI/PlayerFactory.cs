@@ -1,4 +1,4 @@
-﻿using Hangman.UI.Interfaces;
+﻿using Hangman.BLL.Interfaces;
 using Hangman.UI.Players;
 
 namespace Hangman.UI

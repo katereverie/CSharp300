@@ -1,14 +1,14 @@
-﻿using Hangman.UI.Interfaces;
+﻿using Hangman.BLL.Interfaces;
 
 namespace Hangman.UI.WordSources
 {
     public class DefaultDictionary : IWordSource
     {
-        private Random _wordPicker = new Random();
+        private static Random _wordPicker = new Random();
 
         public string? GetWord()
         {
-            string path = @"D:\GitHub\CloneRepository\C#300\FileOperations\Exercises\Hangman\Hangman\Data\dictionary.txt";
+            string path = @"Data\dictionary.txt";
 
             try
             {

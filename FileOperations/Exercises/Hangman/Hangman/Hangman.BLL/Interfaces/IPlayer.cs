@@ -1,4 +1,4 @@
-﻿namespace Hangman.UI.Interfaces
+﻿namespace Hangman.BLL.Interfaces
 {
     public interface IPlayer
     {
