@@ -1,5 +1,6 @@
 ﻿using Hangman.BLL;
 using Hangman.BLL.Interfaces;
+using Hangman.UI.WordSources;
 
 namespace Hangman.UI
 {
@@ -47,9 +48,10 @@ namespace Hangman.UI
                 int matchTotal = 0;
                 MatchResult? result = null;
                 string word = WordPicker.WordSource.GetWord() ?? "";
-                switch (WordPicker.IsHuman)
+
+                switch (WordPicker.WordSource)
                 {
-                    case true:
+                    case CustomWord:
                         Console.WriteLine($"{WordPicker.Name}, pick a word to guess. {WordGuesser.Name} will look away!\n");
                         break;
                     default:
