@@ -25,7 +25,7 @@ namespace Hangman.UI
             "Come on baby, don't fear the Reaper.\n"
         };
 
-        public static PlayerType GetPlayerType(int playerNumber)
+        public static PlayerType GetPlayerType(int playerNumber, bool hasComputerPlayer)
         {
             Console.WriteLine("Welcome to Hangman!\n");
 
@@ -39,7 +39,14 @@ namespace Hangman.UI
                         case 1:
                             return PlayerType.Human;
                         case 2:
-                            return PlayerType.Computer;
+                            switch (hasComputerPlayer)
+                            {
+                                case true:
+                                    Console.WriteLine("At least one player must be human.");
+                                    continue;
+                                default:
+                                    return PlayerType.Computer;
+                            }  
                         default:
                             Console.WriteLine("Invalid Choice. Please enter either 1 or 2.");
                             continue;
@@ -52,7 +59,7 @@ namespace Hangman.UI
 
         }
 
-        public static string GetPlayerName(int playerNumber)
+        public static string GetPlayerName(int playerNumber, string? prevPlayerName)
         {
             do
             {
@@ -62,6 +69,16 @@ namespace Hangman.UI
                 if (string.IsNullOrEmpty(playerName))
                 {
                     Console.WriteLine("Invalid Name. Please do not leave Player Name empty.");
+                    continue;
+                }
+                else if (playerName == "Grim the Reaper")
+                {
+                    Console.WriteLine("This name is reserved for Computer Player. Please choose another name.");
+                    continue;
+                }
+                else if (playerName == prevPlayerName)
+                {
+                    Console.WriteLine($"\"{playerName}\" has already been picked.");
                     continue;
                 }
 
@@ -83,13 +100,18 @@ namespace Hangman.UI
 
                 if (int.TryParse(Console.ReadLine(), out int choice))
                 {
-                    if (choice != 1 && choice != 2)
+                    switch (choice)
                     {
-                        Console.WriteLine("Invalid choice. Please enter either 1 or 2.\n");
-                        continue;
+                        case 1:
+                            Console.WriteLine($"{playerName}, You shall choose your own last words.");
+                            return new CustomWord();
+                        case 2:
+                            Console.WriteLine($"{playerName} shall receive a word from the Hell Librarian.");
+                            return new DefaultDictionary();
+                        default:
+                            Console.WriteLine("Invalid choice. Please enter either 1 or 2.\n");
+                            continue;
                     }
-
-                    return choice == 1 ? new CustomWord() : new DefaultDictionary();
                 }
 
             } while (true);
