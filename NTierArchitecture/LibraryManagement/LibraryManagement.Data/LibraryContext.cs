@@ -1,0 +1,24 @@
+﻿using LibraryManagement.Core.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace LibraryManagement.Data
+{
+    public class LibraryContext : DbContext
+    {
+        private string _connectionString;
+
+        public DbSet<Borrower> Borrower { get; set; }
+
+        // connection string comes from ConsoleUI
+        public LibraryContext(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            optionsBuilder.UseSqlServer(_connectionString);
+        }
+    }
+}
