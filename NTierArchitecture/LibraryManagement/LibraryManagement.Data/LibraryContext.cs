@@ -9,7 +9,6 @@ namespace LibraryManagement.Data
 
         public DbSet<Borrower> Borrower { get; set; }
 
-        // connection string comes from ConsoleUI
         public LibraryContext(string connectionString)
         {
             _connectionString = connectionString;
@@ -17,8 +16,8 @@ namespace LibraryManagement.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer(_connectionString);
+            base.OnConfiguring(optionsBuilder); // apply default settings
+            optionsBuilder.UseSqlServer(_connectionString); // specify SQL provider
         }
     }
 }
