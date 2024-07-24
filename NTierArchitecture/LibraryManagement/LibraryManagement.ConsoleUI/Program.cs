@@ -1,9 +1,6 @@
-﻿using LibraryManagement.Application;
-using LibraryManagement.ConsoleUI;
+﻿using LibraryManagement.ConsoleUI;
 
-var config = new AppConfiguration();
-
-var app = new App(config);
+var app = new App();
 app.Run();
 
 //Console.WriteLine(config.GetConnectionString());

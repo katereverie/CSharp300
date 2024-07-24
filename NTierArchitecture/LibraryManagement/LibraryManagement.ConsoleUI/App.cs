@@ -9,10 +9,10 @@ namespace LibraryManagement.ConsoleUI
         IAppConfiguration _config;
         ServiceFactory _serviceFactory;
 
-        public App(IAppConfiguration config)
+        public App()
         {
             _config = new AppConfiguration();
-            _serviceFactory = new ServiceFactory(config);
+            _serviceFactory = new ServiceFactory(_config);
         }
 
         public void Run()
