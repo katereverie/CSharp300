@@ -12,9 +12,9 @@ namespace LibraryManagement.Data.Repositories
             _dbContext = new LibraryContext(connectionString);
         }
 
-        public void Add(Borrower borrower)
+        public void Add(Borrower b)
         {
-            _dbContext.Borrower.Add(borrower);
+            _dbContext.Borrower.Add(b);
             _dbContext.SaveChanges();
         }
 
@@ -33,9 +33,9 @@ namespace LibraryManagement.Data.Repositories
             return _dbContext.Borrower.FirstOrDefault(b => b.BorrowerID == id);
         }
 
-        public void Update(Borrower borrower)
+        public void Update(Borrower b)
         {
-            _dbContext.Borrower.Update(borrower);
+            _dbContext.Borrower.Update(b);
             _dbContext.SaveChanges();
         }
     }
