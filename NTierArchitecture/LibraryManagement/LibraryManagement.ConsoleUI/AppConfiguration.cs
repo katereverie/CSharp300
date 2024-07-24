@@ -1,4 +1,5 @@
-﻿using LibraryManagement.Core.Interfaces.Application;
+﻿using LibraryManagement.Core.Entities;
+using LibraryManagement.Core.Interfaces.Application;
 using Microsoft.Extensions.Configuration;
 
 namespace LibraryManagement.ConsoleUI
@@ -10,6 +11,7 @@ namespace LibraryManagement.ConsoleUI
         public AppConfiguration()
         {
             _configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
                 .AddUserSecrets<Program>()
                 .Build();
         }
@@ -17,6 +19,24 @@ namespace LibraryManagement.ConsoleUI
         public string GetConnectionString()
         {
             return _configuration["LibraryDb"] ?? "";
+        }
+
+        public DatabaseMode GetDatabaseMode()
+        {
+            if (_configuration["DatabaseMode"] == "")
+            {
+                throw new Exception("DatabaseMode configuration key not found!");
+            }
+
+            switch(_configuration["DatabaseMode"])
+            {
+                case "ORM":
+                    return DatabaseMode.ORM;
+                case "SQL":
+                    return DatabaseMode.DirectSQL;
+                default:
+                    throw new Exception("DabaseMode configuration key is invalid!");
+            }
         }
     }
 }

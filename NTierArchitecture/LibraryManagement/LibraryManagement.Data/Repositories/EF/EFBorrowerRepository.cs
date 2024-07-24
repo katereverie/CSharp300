@@ -1,7 +1,7 @@
 ﻿using LibraryManagement.Core.Entities;
 using LibraryManagement.Core.Interfaces.Repositories;
 
-namespace LibraryManagement.Data.Repositories
+namespace LibraryManagement.Data.Repositories.EF
 {
     public class EFBorrowerRepository : IBorrowerRepository
     {

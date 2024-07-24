@@ -3,7 +3,7 @@ using LibraryManagement.Core.Interfaces.Services;
 
 namespace LibraryManagement.ConsoleUI.IO
 {
-    public class BorrowerWorkflows
+    public static class BorrowerWorkflows
     {
         public static void GetAllBorrowers(IBorrowerService service)
         {
@@ -15,6 +15,7 @@ namespace LibraryManagement.ConsoleUI.IO
 
             if (result.Ok)
             {
+
                 foreach (var b in result.Data)
                 {
                     Console.WriteLine($"{b.BorrowerID,-5} {b.LastName + ", " + b.FirstName,-32} {b.Email}");
@@ -31,13 +32,13 @@ namespace LibraryManagement.ConsoleUI.IO
         public static void GetBorrowerById(IBorrowerService service)
         {
             Console.Clear();
-            var id = Utilities.GetPositiveInteger("Enter borrrower id: ");
+            var id = Utilities.GetPositiveInteger("Enter borrower id: ");
             var result = service.GetBorrower(id);
 
             if (result.Ok)
             {
                 Console.WriteLine("\nBorrower Information");
-                Console.WriteLine("==========================");
+                Console.WriteLine("====================");
                 Console.WriteLine($"Id: {result.Data.BorrowerID}");
                 Console.WriteLine($"Name: {result.Data.LastName}, {result.Data.FirstName}");
                 Console.WriteLine($"Email: {result.Data.Email}");
@@ -53,8 +54,8 @@ namespace LibraryManagement.ConsoleUI.IO
         public static void AddBorrower(IBorrowerService service)
         {
             Console.Clear();
-            Console.WriteLine("Add new Borrower");
-            Console.WriteLine("===================");
+            Console.WriteLine("Add New Borrower");
+            Console.WriteLine("====================");
 
             Borrower newBorrower = new Borrower();
 

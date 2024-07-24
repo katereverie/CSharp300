@@ -38,6 +38,7 @@ namespace LibraryManagement.Application.Services
             {
                 var borrowers = _borrowerRepository.GetAll();
                 return ResultFactory.Success(borrowers);
+
             }
             catch (Exception ex)
             {

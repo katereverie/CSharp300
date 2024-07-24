@@ -16,8 +16,7 @@ namespace LibraryManagement.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            base.OnConfiguring(optionsBuilder); // apply default settings
-            optionsBuilder.UseSqlServer(_connectionString); // specify SQL provider
+            optionsBuilder.UseSqlServer(_connectionString);
         }
     }
 }
