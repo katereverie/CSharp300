@@ -12,9 +12,22 @@ namespace LibraryManagement.Data.Repositories.EF
             _dbContext = new LibraryContext(connectionString);
         }
 
-        public void Add(Borrower b)
+        public void Add(Borrower newBorrower)
         {
-            _dbContext.Borrower.Add(b);
+            _dbContext.Borrower.Add(newBorrower);
+            _dbContext.SaveChanges();
+        }
+
+
+        public void Update(Borrower borrower)
+        {
+            _dbContext.Borrower.Update(borrower);
+            _dbContext.SaveChanges();
+        }
+
+        public void Delete(Borrower borrower)
+        {
+            _dbContext.Borrower.Remove(borrower);
             _dbContext.SaveChanges();
         }
 
@@ -31,12 +44,6 @@ namespace LibraryManagement.Data.Repositories.EF
         public Borrower? GetById(int id)
         {
             return _dbContext.Borrower.FirstOrDefault(b => b.BorrowerID == id);
-        }
-
-        public void Update(Borrower b)
-        {
-            _dbContext.Borrower.Update(b);
-            _dbContext.SaveChanges();
         }
     }
 }

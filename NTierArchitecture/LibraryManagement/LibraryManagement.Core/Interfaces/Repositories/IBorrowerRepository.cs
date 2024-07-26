@@ -4,9 +4,10 @@ namespace LibraryManagement.Core.Interfaces.Repositories
 {
     public interface IBorrowerRepository
     {
-        void Add(Borrower b);
-        void Update(Borrower b);
-        List<Borrower> GetAll();
+        void Add(Borrower newBorrower);
+        void Delete(Borrower borrower);
+        void Update(Borrower borrower);
+        List<Borrower> GetAll(); 
         Borrower? GetById(int id);
         Borrower? GetByEmail(string email);
     }
