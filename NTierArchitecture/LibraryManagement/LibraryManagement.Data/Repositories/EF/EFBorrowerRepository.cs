@@ -19,16 +19,56 @@ namespace LibraryManagement.Data.Repositories.EF
         }
 
 
-        public void Update(Borrower borrower)
+        public void Update(Borrower request)
         {
-            _dbContext.Borrower.Update(borrower);
-            _dbContext.SaveChanges();
+            var borrower = _dbContext.Borrower.
+                FirstOrDefault(b => b.BorrowerID == request.BorrowerID);
+
+            if (borrower != null)
+            {
+                borrower.FirstName = request.FirstName;
+                borrower.LastName = request.LastName;
+                borrower.Email = request.Email;
+                borrower.Phone = request.Phone;
+
+                _dbContext.SaveChanges();
+            }
         }
 
-        public void Delete(Borrower borrower)
+        /// <summary>
+        /// Deletes all data associated with the passed in borrowerID.
+        /// </summary>
+        /// <param name="borrowerID"></param>
+        public void Delete(string email)
         {
-            _dbContext.Borrower.Remove(borrower);
-            _dbContext.SaveChanges();
+            var borrower = _dbContext.Borrower.
+                Where(b => b.Email == email);
+            
+
+            var checkoutLogs = _dbContext.CheckoutLog.
+                Where(cl => cl.BorrowerID == borrower);
+
+            if (checkoutLogs != null )
+            {
+                _dbContext.Remove(borrower);
+                _dbContext.RemoveRange(checkoutLogs);
+
+                _dbContext.SaveChanges();
+            }
+
+            // explicit transaction
+            //using (var transaction = _dbContext.Database.BeginTransaction())
+            //{
+            //    _dbContext.Borrower
+            //        .Where(b => b.BorrowerID == borrowerID)
+            //        .ExecuteDelete();
+
+            //    _dbContext.CheckoutLog
+            //        .Where(cl => cl.BorrowerID == borrowerID)
+            //        .ExecuteDelete();
+
+            //    transaction.Commit();
+            //}
         }
 
         public List<Borrower> GetAll()
