@@ -2,9 +2,11 @@
 {
     public class Media
     {
-        public int MediaID { get; }
-        public int MediaTypeID { get; }
-        public string Title { get; }
-        public bool IsArchived { get; }
+        public int MediaID { get; set; }
+        public int MediaTypeID { get; set; }
+        public string Title { get; set; }
+        public bool IsArchived { get; set; }
+
+        public MediaType MediaType { get; set; }
     }
 }

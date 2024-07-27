@@ -2,11 +2,14 @@
 {
     public class CheckoutLog
     {
-        public int CheckoutLogID { get; }
-        public int BorrowerID { get; }
-        public int MediaID { get; }
-        public DateTime? CheckoutDate { get; }
-        public DateTime? DueDate { get; }
-        public DateTime? ReturnDate { get; }
+        public int CheckoutLogID { get; set; }
+        public int BorrowerID { get; set; }
+        public int MediaID { get; set; }
+        public DateTime? CheckoutDate { get; set; }
+        public DateTime? DueDate { get; set; }
+        public DateTime? ReturnDate { get; set; }
+
+        public Borrower Borrower { get; set; }
+        public Media Media { get; set; }
     }
 }
