@@ -8,5 +8,6 @@
         public bool IsArchived { get; set; }
 
         public MediaType MediaType { get; set; }
+        public List<CheckoutLog>? CheckoutLogs { get; set; }
     }
 }
