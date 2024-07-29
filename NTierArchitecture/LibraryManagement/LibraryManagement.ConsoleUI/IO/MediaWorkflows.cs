@@ -283,15 +283,15 @@ namespace LibraryManagement.ConsoleUI.IO
 
             if (result.Ok && result.Data != null)
             {
-                Console.WriteLine($"\n{"Media ID",-10} {"Title", -30} {"Type", -15} {"Checkout Count",-10}");
-                Console.WriteLine(new string('=', 100));
+                Console.WriteLine($"\n{"Media ID",-10} {"Type", -20} {"Title", -35} {"Checkout Count",-15}");
+                Console.WriteLine(new string('=',80));
 
                 foreach (var mcc in result.Data)
                 {
                     Console.WriteLine($"{mcc.MediaID,-10} " +
-                            $"{mcc.MediaTitle, -20}" +
-                            $"{mcc.MediaType, -15}" +
-                            $"{mcc.CheckoutCount,-10}");
+                            $"{mcc.MediaTypeName, -20} " +
+                            $"{mcc.MediaTitle, -35} " +
+                            $"{mcc.CheckoutCount,-15}");
                 }
             }
             else

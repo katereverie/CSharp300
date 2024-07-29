@@ -95,18 +95,18 @@ namespace LibraryManagement.Data.Repositories.EF
 
         public List<MediaCheckoutCount> GetTopThreeMostPopularMedia()
         {
-            return _dbContext.CheckoutLog
-                .Include(cl => cl.Media)
-                .ThenInclude(m => m.MediaType)
-                .GroupBy(cl => cl.Media)
-                .Select(group => new MediaCheckoutCount
+            return _dbContext.Media
+                .Include(m => m.MediaType)
+                .Include(m => m.CheckoutLogs)
+                .Where(m => m.MediaType != null && m.CheckoutLogs != null)
+                .Select(m => new MediaCheckoutCount
                 {
-                    MediaID = group.Key.MediaID,
-                    MediaTitle = group.Key.Title,
-                    MediaType = group.Key.MediaType.MediaTypeName,
-                    CheckoutCount = group.Count()
+                    MediaID = m.MediaID,
+                    MediaTitle = m.Title,
+                    MediaTypeName = m.MediaType.MediaTypeName,
+                    CheckoutCount = m.CheckoutLogs.Count()
                 })
-                .OrderByDescending(group => group.CheckoutCount)
+                .OrderByDescending(m => m.CheckoutCount)
                 .Take(3)
                 .ToList();
         }
