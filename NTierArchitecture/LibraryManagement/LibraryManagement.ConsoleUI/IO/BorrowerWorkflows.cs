@@ -108,7 +108,7 @@ namespace LibraryManagement.ConsoleUI.IO
                 do
                 {
                     Console.WriteLine("\nBorrower match found.\nHere's a list of edit options.");
-                    Utilities.PrintEditBorrowerOptions();
+                    Menus.DisplayEditBorrowerOptions();
                     option = Utilities.GetPositiveInteger("Enter edit options (1-5) or return (6): ");
 
                     if (option >= 1 && option <= 6)

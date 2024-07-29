@@ -2,7 +2,7 @@
 {
     public class Menus
     {
-        public static int MainMenu()
+        public static void DisplayMainMenu()
         {
             Console.Clear();
             Console.WriteLine("Library Manager Main Menu");
@@ -10,56 +10,23 @@
             Console.WriteLine("1. Borrower Management");
             Console.WriteLine("2. Media Management");
             Console.WriteLine("3. Checkout Management");
-            Console.WriteLine("4. Quit");
-
-            int choice;
-
-            do
-            {
-                Console.Write("Enter your choice (1-4): ");
-                if (int.TryParse(Console.ReadLine(), out choice))
-                {
-                    if (choice >= 1 && choice <=4)
-                    {
-                        return choice;
-                    }
-                }
-
-                Console.WriteLine("Invalid choice!");
-            } while (true);
+            Console.WriteLine("4. Exit\n");
         }
 
-        public static int BorrowerManagementMenu()
+        public static void DisplayBorrowerManagementMenu()
         {
             Console.Clear();
             Console.WriteLine("Borrower Management");
             Console.WriteLine("===================");
-            Console.WriteLine("1. List all Borrowers");
-            Console.WriteLine("2. View a Borrower");
-            Console.WriteLine("3. Edit a Borrower");
-            Console.WriteLine("4. Add a Borrower");
-            Console.WriteLine("5. Delete a Borrower");
-            Console.WriteLine("6. Go back to previous Menu");
-
-            int choice;
-
-            do
-            {
-                Console.Write("Enter choice (1-6): ");
-                if (int.TryParse(Console.ReadLine(), out choice))
-                {
-                    if (choice >= 1 && choice <= 6)
-                    {
-                        return choice;
-                    }
-                }
-
-                Console.WriteLine("Invalid choice!");
-            } while (true);
+            Console.WriteLine("1. List all borrowers");
+            Console.WriteLine("2. View a borrower");
+            Console.WriteLine("3. Edit a borrower");
+            Console.WriteLine("4. Add a borrower");
+            Console.WriteLine("5. Delete a borrower");
+            Console.WriteLine("6. Go back to previous menu\n");
         }
 
-
-        public static int MediaManagementMenu()
+        public static void DisplayMediaManagementMenu()
         {
             Console.Clear();
             Console.WriteLine("Media Management");
@@ -70,26 +37,10 @@
             Console.WriteLine("4. Archive Media");
             Console.WriteLine("5. View Archive");
             Console.WriteLine("6. Most Popular Media Report");
-            Console.WriteLine("7. Go back to previous Menu");
-
-            int choice;
-
-            do
-            {
-                Console.Write("Enter choice (1-7): ");
-                if (int.TryParse(Console.ReadLine(), out choice))
-                {
-                    if (choice >= 1 && choice <= 7)
-                    {
-                        return choice;
-                    }
-                }
-
-                Console.WriteLine("Invalid choice!");
-            } while (true);
+            Console.WriteLine("7. Go back to previous menu\n");
         }
 
-        public static int CheckoutManagementMenu()
+        public static void DisplayCheckoutManagementMenu()
         {
             Console.Clear();
             Console.WriteLine("Checkout Management");
@@ -97,23 +48,38 @@
             Console.WriteLine("1. Checkout");
             Console.WriteLine("2. Return");
             Console.WriteLine("3. Checkout Log");
-            Console.WriteLine("4. Go back to previous Menu");
+            Console.WriteLine("4. Go back to previous Menu\n");
+        }
 
-            int choice;
+        public static void DisplayEditBorrowerOptions()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Edit Options");
+            Console.WriteLine("============");
+            Console.WriteLine("1. First Name");
+            Console.WriteLine("2. Last Name");
+            Console.WriteLine("3. Email");
+            Console.WriteLine("4. Phone Number");
+            Console.WriteLine("5. Edit All Information");
+            Console.WriteLine("6. Go back to previous menu\n");
+        }
 
-            do
-            {
-                Console.Write("Enter choice (1-4): ");
-                if (int.TryParse(Console.ReadLine(), out choice))
-                {
-                    if (choice >= 1 && choice <= 4)
-                    {
-                        return choice;
-                    }
-                }
+        public static void DisplayMediaType()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Media Types");
+            Console.WriteLine("===========");
+            Console.WriteLine("1. Book");
+            Console.WriteLine("2. DVD");
+            Console.WriteLine("3. Digital Audio");
+            Console.WriteLine("4. Go back to previous menu\n");
+        }
 
-                Console.WriteLine("Invalid choice!");
-            } while (true);
+        public static void DisplayCheckoutOptions()
+        {
+            Console.WriteLine();
+            Console.WriteLine("1. Check out another item");
+            Console.WriteLine("2. Exit\n");
         }
     }
 }

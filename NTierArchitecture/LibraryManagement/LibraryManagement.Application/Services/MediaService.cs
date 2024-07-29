@@ -64,10 +64,11 @@ namespace LibraryManagement.Application.Services
             try
             {
                 var list = _mediaRepository.GetAllArchived();
-                
-                return list is null ? 
-                    ResultFactory.Fail<List<Media>>("No media is currently archived.") :
-                    ResultFactory.Success(list);
+
+                return list != null && list.Any() ?
+                       ResultFactory.Success(list) :
+                       ResultFactory.Fail<List<Media>>("No media is currently archived.");
+                    
             }
             catch (Exception ex)
             {
