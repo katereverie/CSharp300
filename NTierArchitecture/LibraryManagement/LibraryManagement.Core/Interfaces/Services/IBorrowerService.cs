@@ -5,10 +5,9 @@ namespace LibraryManagement.Core.Interfaces.Services
     public interface IBorrowerService
     {
         Result<List<Borrower>> GetAllBorrowers();
-        Result<Borrower> GetBorrowerByEmail(string email);
-        Result<Borrower> UpdateBorrower(Borrower borrower);
-        Result<Borrower> DeletBorrower(Borrower borrower);
+        Result<Borrower> GetBorrower(string email);
+        Result UpdateBorrower(Borrower borrower);
         Result AddBorrower(Borrower newBorrower);
-        Result VerifyDuplicateBorrower(string email);
+        Result DeleteBorrower(Borrower Borrower);
     }
 }

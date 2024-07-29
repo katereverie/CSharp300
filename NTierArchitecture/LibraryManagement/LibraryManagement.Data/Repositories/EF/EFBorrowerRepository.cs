@@ -39,20 +39,18 @@ namespace LibraryManagement.Data.Repositories.EF
         /// Deletes all data associated with the passed in borrowerID.
         /// </summary>
         /// <param name="borrowerID"></param>
-        public void Delete(string email)
+        public void Delete(Borrower borrower)
         {
-            var borrower = _dbContext.Borrower.
-                Where(b => b.Email == email);
-            
 
             var checkoutLogs = _dbContext.CheckoutLog.
-                Where(cl => cl.BorrowerID == borrower);
+                Where(cl => cl.BorrowerID == borrower.BorrowerID);
+
+            _dbContext.Remove(borrower);
+            _dbContext.SaveChanges();
 
             if (checkoutLogs != null )
             {
-                _dbContext.Remove(borrower);
                 _dbContext.RemoveRange(checkoutLogs);
-
                 _dbContext.SaveChanges();
             }
 
@@ -79,11 +77,6 @@ namespace LibraryManagement.Data.Repositories.EF
         public Borrower? GetByEmail(string email)
         {
             return _dbContext.Borrower.FirstOrDefault(b => b.Email == email);
-        }
-
-        public Borrower? GetById(int id)
-        {
-            return _dbContext.Borrower.FirstOrDefault(b => b.BorrowerID == id);
         }
     }
 }

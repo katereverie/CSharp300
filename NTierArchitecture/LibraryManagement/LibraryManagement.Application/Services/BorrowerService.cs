@@ -13,7 +13,21 @@ namespace LibraryManagement.Application.Services
             _borrowerRepository = borrowerRepository;
         }
 
-        public Result<Borrower> GetBorrowerByEmail(string email)
+        public Result<List<Borrower>> GetAllBorrowers()
+        {
+            try
+            {
+                var borrowers = _borrowerRepository.GetAll();
+                return ResultFactory.Success(borrowers);
+
+            }
+            catch (Exception ex)
+            {
+                return ResultFactory.Fail<List<Borrower>>(ex.Message);
+            }
+        }
+
+        public Result<Borrower> GetBorrower(string email)
         {
             try
             {
@@ -29,17 +43,16 @@ namespace LibraryManagement.Application.Services
             }
         }
 
-        public Result<List<Borrower>> GetAllBorrowers()
+        public Result UpdateBorrower(Borrower borrower)
         {
             try
             {
-                var borrowers = _borrowerRepository.GetAll();
-                return ResultFactory.Success(borrowers);
-
+                _borrowerRepository.Update(borrower);
+                return ResultFactory.Success();
             }
             catch (Exception ex)
             {
-                return ResultFactory.Fail<List<Borrower>>(ex.Message);
+                return ResultFactory.Fail(ex.Message);
             }
         }
 
@@ -62,50 +75,18 @@ namespace LibraryManagement.Application.Services
             }
         }
 
-        public Result<Borrower> DeletBorrower(Borrower borrower)
+        public Result DeleteBorrower(Borrower borrower)
         {
             try
             {
                 _borrowerRepository.Delete(borrower);
-                return ResultFactory.Success(borrower);
-            }
-            catch (Exception ex)
-            {
-                return ResultFactory.Fail<Borrower>(ex.Message);
-            }
-
-        }
-
-        public Result<Borrower> UpdateBorrower(Borrower borrower)
-        {
-            try
-            {
-                _borrowerRepository.Update(borrower);
-                return ResultFactory.Success(borrower);
-            }
-            catch (Exception ex)
-            {
-                return ResultFactory.Fail<Borrower>(ex.Message);
-            }
-        }
-
-        public Result VerifyDuplicateBorrower(string email)
-        {
-            try
-            {
-                var hasDuplicate = _borrowerRepository.GetByEmail(email) != null ? true : false;
-
-                if (hasDuplicate)
-                {
-                    return ResultFactory.Fail($"{email} has already been taken.");
-                }
-
                 return ResultFactory.Success();
             }
             catch (Exception ex)
             {
                 return ResultFactory.Fail(ex.Message);
             }
-        }
+
+        } 
     }
 }
