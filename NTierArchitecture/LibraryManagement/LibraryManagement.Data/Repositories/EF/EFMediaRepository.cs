@@ -15,7 +15,7 @@ namespace LibraryManagement.Data.Repositories.EF
 
         public int Add(Media newMedia)
         {
-            _dbContext.Add(newMedia);
+            _dbContext.Media.Add(newMedia);
             _dbContext.SaveChanges();
 
             return newMedia.MediaID;

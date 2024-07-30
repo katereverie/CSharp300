@@ -48,7 +48,7 @@ namespace LibraryManagement.Data.Repositories.EF
             _dbContext.Remove(borrower);
             _dbContext.SaveChanges();
 
-            if (checkoutLogs != null )
+            if (checkoutLogs != null)
             {
                 _dbContext.RemoveRange(checkoutLogs);
                 _dbContext.SaveChanges();

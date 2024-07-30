@@ -15,7 +15,7 @@ namespace LibraryManagement.Data.Repositories.EF
 
         public int Add(CheckoutLog newCheckoutLog)
         {
-            _dbContext.Add(newCheckoutLog);
+            _dbContext.CheckoutLog.Add(newCheckoutLog);
             _dbContext.SaveChanges();
 
             return newCheckoutLog.CheckoutLogID;
@@ -33,7 +33,12 @@ namespace LibraryManagement.Data.Repositories.EF
         public List<Media> GetUncheckedoutUnarchivedMedia()
         {
             return _dbContext.Media
-                             .Where(m => !m.IsArchived && (!m.CheckoutLogs.Any() || m.CheckoutLogs.Any(cl => cl.ReturnDate != null)))
+                             .Include(m => m.CheckoutLogs)
+                             .Where(m => !m.IsArchived)
+                             .Where(m => !m.CheckoutLogs.Any() ||
+                                         (m.CheckoutLogs.Any() &&
+                                          m.CheckoutLogs.OrderByDescending(cl => cl.CheckoutLogID)
+                                                       .First().ReturnDate != null))
                              .ToList();
         }
 
@@ -63,7 +68,7 @@ namespace LibraryManagement.Data.Repositories.EF
 
             if (checkoutLog != null)
             {
-                checkoutLog.ReturnDate = DateTime.Today;
+                checkoutLog.ReturnDate = DateTime.Now;
 
                 _dbContext.SaveChanges();
             }
