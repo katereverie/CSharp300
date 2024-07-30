@@ -15,7 +15,7 @@ namespace LibraryManagement.Application.Services
             _mediaRepository = mediaRepository;
         }
 
-        public Result CanBorrowerCheckout(int borrowerID)
+        public Result CheckBorrowStatus(int borrowerID)
         {
             try
             {
@@ -83,9 +83,10 @@ namespace LibraryManagement.Application.Services
             {
                 var list = _checkoutRepository.GetUncheckedoutUnarchivedMedia();
 
-                return list is null ?
-                       ResultFactory.Fail<List<Media>>("No such list found.") :
-                       ResultFactory.Success(list);
+                return list.Any() ?
+                       ResultFactory.Success(list) :
+                       ResultFactory.Fail<List<Media>>("All media are either checked out or archived.");
+                       
             }
             catch (Exception ex)
             {
@@ -115,9 +116,10 @@ namespace LibraryManagement.Application.Services
             {
                 var list = _checkoutRepository.GetCheckedoutMediaByBorrowerID(borrowerID);
 
-                return list is null ?
-                       ResultFactory.Fail<List<CheckoutLogDto>>($"Borrower with ID: {borrowerID} hasn't checked out any media.") :
-                       ResultFactory.Success(list);
+                return list.Any(log => log != null) ?
+                       ResultFactory.Success(list) :
+                       ResultFactory.Fail<List<CheckoutLogDto>>($"Borrower hasn't checked out any media.");
+                       
             }
             catch (Exception ex)
             {

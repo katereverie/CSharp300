@@ -10,106 +10,102 @@ namespace LibraryManagement.ConsoleUI.IO
             Console.Clear();
 
             string email = Utilities.GetRequiredString("Enter Borrower's Email: ");
-            var getResult = serivce.GetBorrowerByEmail(email);
+            var getBorrowerResult = serivce.GetBorrowerByEmail(email);
 
-            if (getResult.Data != null && getResult.Ok)
+            if (getBorrowerResult.Data == null || !getBorrowerResult.Ok)
             {
-                Console.WriteLine("Borrower found.");
-            
+                Console.WriteLine(getBorrowerResult.Message);
+                Utilities.AnyKey();
+                return;
+            }
+
+            Console.WriteLine("Borrower found.");
+
+            do
+            {
+                var checkResult = serivce.CheckBorrowStatus(getBorrowerResult.Data.BorrowerID);
+                if (!checkResult.Ok)
+                {
+                    Console.WriteLine(checkResult.Message);
+                    Utilities.AnyKey();
+                    return;
+                }
+
+                var getMediaResult = serivce.GetAllUncheckedoutUnarchivedMedia();
+
+                if (!getMediaResult.Ok)
+                {
+                    Console.WriteLine(getMediaResult.Message);
+                    Utilities.AnyKey();
+                    return;
+                }
+
+                Console.WriteLine($"{"Media ID",-20} {"Title",-30}");
+                Console.WriteLine(new string('=', 60));
+                foreach (var log in getMediaResult.Data)
+                {
+                    Console.WriteLine($"{log.MediaID,-20} " +
+                                      $"{log.Title,-30}");
+                }
+
+                Console.WriteLine();
+
+                int mediaID = 0;
+
                 do
                 {
-                    var canBorrowerCheckout = serivce.CanBorrowerCheckout(getResult.Data.BorrowerID);
-                    if (canBorrowerCheckout.Ok)
+                    mediaID = Utilities.GetPositiveInteger("Enter the ID of the media to check out: ");
+                    bool hasMatch = getMediaResult.Data.Any(m => m.MediaID == mediaID);
+                    if (!hasMatch)
                     {
-                        var logsResult = serivce.GetAllUncheckedoutUnarchivedMedia();
-
-                        if (logsResult.Data != null && logsResult.Data.Any())
-                        {
-                            Console.WriteLine($"{"Media ID",-20} {"Title",-30}");
-                            Console.WriteLine(new string('=', 60));
-                            foreach (var log in logsResult.Data)
-                            {
-                                Console.WriteLine($"{log.MediaID,-20} " +
-                                                  $"{log.Title,-30}");
-                            }
-
-                            Console.WriteLine();
-
-                            do
-                            {
-                                int mediaID = Utilities.GetPositiveInteger("Enter the ID of the media to check out: ");
-                                var getMediaResult = serivce.GetMediaByID(mediaID);
-
-                                if (getMediaResult.Data != null && getMediaResult.Ok)
-                                {
-                                    CheckoutLog newLog = new CheckoutLog();
-                                    newLog.BorrowerID = getResult.Data.BorrowerID;
-                                    newLog.MediaID = mediaID;
-                                    newLog.CheckoutDate = DateTime.Now;
-                                    newLog.DueDate = newLog.CheckoutDate.AddDays(7);
-                                    newLog.ReturnDate = null;
-
-                                    var checkoutResult = serivce.CheckoutMedia(newLog);
-                                    if (checkoutResult.Ok)
-                                    {
-                                        Console.WriteLine($"New checkout log registered with ID: {checkoutResult.Data}");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine(checkoutResult.Message);
-                                    }
-                                }
-                                else
-                                {
-                                    Console.WriteLine(getMediaResult.Message);
-                                }
-
-                                break;
-
-                            } while (true);
-                        }
-                        else
-                        {
-                            Console.WriteLine(logsResult.Message);
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine(canBorrowerCheckout.Message);
+                        Console.WriteLine("Please enter an available Media ID.");
+                        continue;
                     }
 
-                    int exitChoice = 0;
-
-                    do
-                    {
-                        Menus.DisplayCheckoutOptions();
-                        int userChoice = Utilities.GetPositiveInteger("Enter choice (1-2): ");
-                        if (userChoice >= 1 && userChoice <= 2)
-                        {
-                            exitChoice = userChoice;
-                            break;
-                        }
-
-                        Console.WriteLine("Invalid choice.");
-                    } while (true);
-
-                    switch (exitChoice)
-                    {
-                        case 1:
-                            Utilities.AnyKey();
-                            continue;
-                        case 2:
-                            return;
-                    }
-
+                    break;
                 } while (true);
-            }
-            else
-            {
-                Console.WriteLine(getResult.Message);
-            }
 
-            Utilities.AnyKey();
+                CheckoutLog newLog = new CheckoutLog();
+                newLog.BorrowerID = getBorrowerResult.Data.BorrowerID;
+                newLog.MediaID = mediaID;
+                newLog.CheckoutDate = DateTime.Now;
+                newLog.DueDate = newLog.CheckoutDate.AddDays(7);
+                newLog.ReturnDate = null;
+
+                var checkoutResult = serivce.CheckoutMedia(newLog);
+                if (!checkoutResult.Ok)
+                {
+                    Console.WriteLine(checkoutResult.Message);
+                    Utilities.AnyKey();
+                    continue;
+                }
+
+                Console.WriteLine($"New checkout log registered with ID: {checkoutResult.Data}");
+
+                int exitChoice = 0;
+
+                do
+                {
+                    Menus.DisplayCheckoutOptions();
+                    int userChoice = Utilities.GetPositiveInteger("Enter choice (1-2): ");
+                    if (userChoice >= 1 && userChoice <= 2)
+                    {
+                        exitChoice = userChoice;
+                        break;
+                    }
+                    Console.WriteLine("Invalid choice.");
+                } while (true);
+
+                switch (exitChoice)
+                {
+                    case 1:
+                        Utilities.AnyKey();
+                        continue;
+                    case 2:
+                        return;
+                }
+
+            } while (true);
         }
 
         public static void Return(ICheckoutService serivce)
@@ -117,55 +113,89 @@ namespace LibraryManagement.ConsoleUI.IO
             Console.Clear();
 
             string email = Utilities.GetRequiredString("Enter Borrower's Email: ");
-            var getResult = serivce.GetBorrowerByEmail(email);
+            var getBorrowerResult = serivce.GetBorrowerByEmail(email);
 
-            if (getResult.Data != null && getResult.Ok)
+            if (!getBorrowerResult.Ok)
             {
-                Console.WriteLine("Borrower found.");
+                Console.WriteLine(getBorrowerResult.Message);
+                Utilities.AnyKey();
+                return;
+            }
 
-                var getLogsResult = serivce.GetCheckedOutMediaByBorrowerID(getResult.Data.BorrowerID);
-                if (getLogsResult.Data != null && getLogsResult.Ok)
+            do
+            {
+                var getMediaResult = serivce.GetCheckedOutMediaByBorrowerID(getBorrowerResult.Data.BorrowerID);
+                if (!getMediaResult.Ok)
                 {
-                    Console.WriteLine($"{"Log ID", -10} {"Title", -30}");
-                    Console.WriteLine(new string('=', 50));
+                    Console.WriteLine(getMediaResult.Message);
+                    Utilities.AnyKey();
+                    return;
+                }
 
-                    foreach (var log in getLogsResult.Data)
+                Console.WriteLine($"{"Log ID",-10} {"Title",-30}");
+                Console.WriteLine(new string('=', 50));
+
+                foreach (var log in getMediaResult.Data)
+                {
+                    Console.WriteLine($"{log.CheckoutLogID,-10} " +
+                                      $"{log.Title,-30} ");
+                }
+
+                Console.WriteLine();
+
+                int logID;
+                int exitChoice;
+                bool hasMatch = false;
+
+                do
+                {
+                    logID = Utilities.GetPositiveInteger("Enter the Log ID to return: ");
+
+                    hasMatch = getMediaResult.Data.Any(dto => dto.CheckoutLogID == logID);
+                    if (!hasMatch)
                     {
-                        Console.WriteLine($"{log.CheckoutLogID,-10} " +
-                                          $"{log.Title,-30} ");
+                        Console.WriteLine("Please enter an available checkout log ID.");
+                        continue;
                     }
+                    break;
+                } while (true);
 
-                    Console.WriteLine();
+                var returnResult = serivce.ReturnMedia(logID);
 
-                    do
-                    {
-                        int logID = Utilities.GetPositiveInteger("Enter the Log ID to return: ");
-
-                        var returnResult = serivce.ReturnMedia(logID);
-
-                        if (returnResult.Ok)
-                        {
-                            Console.WriteLine("Return successful.");
-                        }
-                        else
-                        {
-                            Console.WriteLine(returnResult.Message);
-                        }
-
-                        break;
-
-                    } while (true);
-                    
+                if (returnResult.Ok)
+                {
+                    Console.WriteLine("Return successful.");
                 }
                 else
                 {
-                    Console.WriteLine(getLogsResult.Message);
+                    Console.WriteLine(returnResult.Message);
                 }
-            }
-            else
-            {
-                Console.WriteLine(getResult.Message);
-            }
+
+                if (getMediaResult.Data.Count() == 1)
+                {
+                    break;
+                }
+
+                do
+                {
+                    Menus.DisplayReturnOptions();
+                    exitChoice = Utilities.GetPositiveInteger("Enter choice (1-2): ");
+
+                    switch (exitChoice)
+                    {
+                        case 1:
+                            break;
+                        case 2:
+                            Utilities.AnyKey();
+                            return;
+                        default:
+                            Console.WriteLine("Invalid choice.");
+                            continue;
+                    }
+                    break;
+                } while (true);
+
+            } while (true);
 
             Utilities.AnyKey();
         }
@@ -174,34 +204,34 @@ namespace LibraryManagement.ConsoleUI.IO
         {
             Console.Clear();
 
-            var result = serivce.GetAllCheckedoutMedia();
+            var getMediaResult = serivce.GetAllCheckedoutMedia();
 
-            if (result.Ok && result.Data != null)
+            if (!getMediaResult.Ok)
             {
-                Console.WriteLine($"{"Name", -20} {"Email", -30} {"Title", -30} {"Checkout Date", -20} {"Due Date", -20}");
-                Console.WriteLine(new string('=', 120));
-
-                foreach (var log in result.Data)
-                {
-                    Console.Write($"{log.Borrower.LastName + ", " + log.Borrower.FirstName,-20} " +
-                                  $"{log.Borrower.Email,-30} " +
-                                  $"{log.Media.Title,-30} " +
-                                  $"{log.CheckoutDate,-20:MM/dd/yyyy} "); 
-                    if (log.DueDate < DateTime.Now)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine($"{log.DueDate,-20:MM/dd/yyyy}");
-                        Console.ResetColor();
-                    }
-                    else
-                    {
-                        Console.WriteLine($"{log.DueDate,-20:MM/dd/yyyy}");
-                    }
-                }
+                Console.WriteLine(getMediaResult.Message);
+                Utilities.AnyKey();
+                return;
             }
-            else
+
+            Console.WriteLine($"{"Name", -20} {"Email", -30} {"Title", -30} {"Checkout Date", -20} {"Due Date", -20}");
+            Console.WriteLine(new string('=', 120));
+
+            foreach (var log in getMediaResult.Data)
             {
-                Console.WriteLine(result.Message);
+                Console.Write($"{log.Borrower.LastName + ", " + log.Borrower.FirstName,-20} " +
+                              $"{log.Borrower.Email,-30} " +
+                              $"{log.Media.Title,-30} " +
+                              $"{log.CheckoutDate,-20:MM/dd/yyyy} "); 
+                if (log.DueDate < DateTime.Now)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"{log.DueDate,-20:MM/dd/yyyy}");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.WriteLine($"{log.DueDate,-20:MM/dd/yyyy}");
+                }
             }
 
             Utilities.AnyKey();
