@@ -81,5 +81,12 @@
             Console.WriteLine("1. Check out another item");
             Console.WriteLine("2. Exit\n");
         }
+
+        public static void DisplayReturnOptions()
+        {
+            Console.WriteLine();
+            Console.WriteLine("1. Return another item");
+            Console.WriteLine("2. Exit\n");
+        }
     }
 }
