@@ -81,9 +81,9 @@ namespace LibraryManagement.ConsoleUI.IO
 
             var result = service.AddMedia(newMedia);
 
-            if (result.Ok && result.Data != null)
+            if (result.Ok)
             {
-                Console.WriteLine($"new Media with ID: {result.Data.MediaID} added successfully.");
+                Console.WriteLine($"new Media with ID: {result.Data} added successfully.");
             }
             else
             {
@@ -258,17 +258,15 @@ namespace LibraryManagement.ConsoleUI.IO
 
             var result = service.GetAllArchivedMedia();
 
-            if (result.Data != null && result.Data.Any())
+            if (result.Ok)
             {
-                Console.WriteLine($"\n{"Media ID",-10} {"Type",-15} {"Title",-35} {"Status",-60}");
-                Console.WriteLine(new string('=', 100));
+                Console.WriteLine($"\n{"Type ID",-10} {"Title",-30}");
+                Console.WriteLine(new string('=', 50));
 
                 foreach (var m in result.Data)
                 {
-                    Console.WriteLine($"{m.MediaID,-10} " +
-                            $"{m.MediaType.MediaTypeName,-15} " +
-                            $"{m.Title,-35} " +
-                            $"{(m.IsArchived ? "Archived" : "Available"),-60}");
+                    Console.WriteLine($"{m.MediaTypeID,-10} " +
+                                      $"{m.Title,-3} ");
                 }
             }
             else
@@ -294,7 +292,7 @@ namespace LibraryManagement.ConsoleUI.IO
                 {
                     Console.WriteLine($"{mcc.MediaID,-10} " +
                             $"{mcc.MediaTypeName, -20} " +
-                            $"{mcc.MediaTitle, -35} " +
+                            $"{mcc.Title, -35} " +
                             $"{mcc.CheckoutCount,-15}");
                 }
             }
