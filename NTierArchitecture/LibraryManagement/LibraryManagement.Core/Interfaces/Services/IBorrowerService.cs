@@ -7,7 +7,7 @@ namespace LibraryManagement.Core.Interfaces.Services
         Result<List<Borrower>> GetAllBorrowers();
         Result<Borrower> GetBorrower(string email);
         Result UpdateBorrower(Borrower borrower);
-        Result AddBorrower(Borrower newBorrower);
+        Result<int> AddBorrower(Borrower newBorrower);
         Result DeleteBorrower(Borrower Borrower);
     }
 }
