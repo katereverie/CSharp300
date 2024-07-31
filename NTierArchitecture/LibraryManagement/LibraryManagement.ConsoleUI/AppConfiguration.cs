@@ -35,7 +35,7 @@ namespace LibraryManagement.ConsoleUI
                 case "SQL":
                     return DatabaseMode.DirectSQL;
                 default:
-                    throw new Exception("DabaseMode configuration key is invalid!");
+                    throw new Exception("DatabaseMode configuration key is invalid!");
             }
         }
     }
