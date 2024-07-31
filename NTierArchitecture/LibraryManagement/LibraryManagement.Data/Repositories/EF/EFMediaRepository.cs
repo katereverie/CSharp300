@@ -23,8 +23,7 @@ namespace LibraryManagement.Data.Repositories.EF
 
         public void Update(Media request)
         {
-            var media = _dbContext.Media.
-                FirstOrDefault(m => m.MediaID == request.MediaID);
+            var media = _dbContext.Media.FirstOrDefault(m => m.MediaID == request.MediaID);
 
             if (media != null)
             {
@@ -39,7 +38,7 @@ namespace LibraryManagement.Data.Repositories.EF
         {
             var media = _dbContext.Media.FirstOrDefault(m => m.MediaID == mediaID);
 
-            if (media != null )
+            if (media != null)
             {
                 media.IsArchived = true;
 
@@ -62,53 +61,53 @@ namespace LibraryManagement.Data.Repositories.EF
             return _dbContext.Media.FirstOrDefault(m => m.MediaID == mediaId);
         }
 
-        public List<Media>? GetMediaByType(int typeId)
+        public List<Media> GetMediaByType(int typeId)
         {
             return _dbContext.Media
-                .Where(m => m.MediaTypeID == typeId)
-                .ToList();
+                             .Where(m => m.MediaTypeID == typeId)
+                             .ToList();
         }
 
-        public List<Media>? GetAllUnarchived()
+        public List<Media> GetAllUnarchived()
         {
             return _dbContext.Media
-                .Where(m => m.IsArchived == false)
-                .ToList();
+                             .Where(m => m.IsArchived == false)
+                             .ToList();
         }
 
-        public List<Media>? GetUnarchivedByType(int typeId)
+        public List<Media> GetUnarchivedByType(int typeId)
         {
             return _dbContext.Media
-                .Where(m => !m.IsArchived && m.MediaTypeID == typeId)
-                .ToList();
+                             .Where(m => !m.IsArchived && m.MediaTypeID == typeId)
+                             .ToList();
         }
 
-        public List<Media>? GetAllArchived()
+        public List<Media> GetAllArchived()
         {
             return _dbContext.Media
-                .Where(m => m.IsArchived == true)
-                .Include("MediaType")
-                .OrderBy(m => m.MediaTypeID)
-                .ThenBy(m => m.Title)
-                .ToList();
+                             .Include(m => m.MediaType)
+                             .Where(m => m.IsArchived == true)
+                             .OrderBy(m => m.MediaTypeID)
+                             .ThenBy(m => m.Title)
+                             .ToList();
         }
 
         public List<MediaCheckoutCount> GetTopThreeMostPopularMedia()
         {
             return _dbContext.Media
-                .Include(m => m.MediaType)
-                .Include(m => m.CheckoutLogs)
-                .Where(m => m.MediaType != null && m.CheckoutLogs != null)
-                .Select(m => new MediaCheckoutCount
-                {
-                    MediaID = m.MediaID,
-                    MediaTitle = m.Title,
-                    MediaTypeName = m.MediaType.MediaTypeName,
-                    CheckoutCount = m.CheckoutLogs.Count()
-                })
-                .OrderByDescending(m => m.CheckoutCount)
-                .Take(3)
-                .ToList();
+                             .Include(m => m.MediaType)
+                             .Include(m => m.CheckoutLogs)
+                             .Where(m => m.MediaType != null && m.CheckoutLogs != null)
+                             .Select(m => new MediaCheckoutCount
+                                             {
+                                                 MediaID = m.MediaID,
+                                                 Title = m.Title,
+                                                 MediaTypeName = m.MediaType.MediaTypeName,
+                                                 CheckoutCount = m.CheckoutLogs.Count()
+                                             })
+                             .OrderByDescending(m => m.CheckoutCount)
+                             .Take(3)
+                             .ToList();
         }
     }
 }
