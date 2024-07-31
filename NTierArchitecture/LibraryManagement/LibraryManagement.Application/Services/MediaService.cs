@@ -13,16 +13,16 @@ namespace LibraryManagement.Application.Services
             _mediaRepository = mediaRepository;
         }
 
-        public Result<Media> AddMedia(Media newMedia)
+        public Result<int> AddMedia(Media newMedia)
         {
             try
             {
-                _mediaRepository.Add(newMedia);
-                return ResultFactory.Success(newMedia);
+                int newID = _mediaRepository.Add(newMedia);
+                return ResultFactory.Success(newID);
             }
             catch (Exception ex)
             {
-                return ResultFactory.Fail<Media>(ex.Message);
+                return ResultFactory.Fail<int>(ex.Message);
             }
         }
 
@@ -65,7 +65,7 @@ namespace LibraryManagement.Application.Services
             {
                 var list = _mediaRepository.GetAllArchived();
 
-                return list != null && list.Any() ?
+                return list.Any() ?
                        ResultFactory.Success(list) :
                        ResultFactory.Fail<List<Media>>("No media is currently archived.");
                     
