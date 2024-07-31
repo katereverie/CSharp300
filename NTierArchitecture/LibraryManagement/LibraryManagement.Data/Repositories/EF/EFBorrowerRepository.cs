@@ -14,7 +14,6 @@ namespace LibraryManagement.Data.Repositories.EF
 
         public void Add(Borrower newBorrower)
         {
-            // a failed attempt still generated an ID but it is not to be found anywhere
             _dbContext.Borrower.Add(newBorrower);
             _dbContext.SaveChanges();
         }

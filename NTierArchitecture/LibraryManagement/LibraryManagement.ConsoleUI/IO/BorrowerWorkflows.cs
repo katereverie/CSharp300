@@ -81,7 +81,7 @@ namespace LibraryManagement.ConsoleUI.IO
 
             if (result.Ok)
             {
-                Console.WriteLine($"New Borrower successfully added.");
+                Console.WriteLine($"Borrower created with id: {newBorrower.BorrowerID}");
             }
             else
             {
