@@ -31,12 +31,28 @@ namespace LibraryManagement.Application
 
         public IMediaService CreateMediaService()
         {
-            return new MediaService(new EFMediaRepository(_config.GetConnectionString()));
+            switch (_config.GetDatabaseMode())
+            {
+                case DatabaseMode.ORM:
+                    return new MediaService(new EFMediaRepository(_config.GetConnectionString()));
+                case DatabaseMode.DirectSQL:
+                    return new MediaService(new DMediaRepository(_config.GetConnectionString()));
+                default:
+                    throw new Exception("DatabaseMode configuration is off.");
+            }  
         }
 
         public ICheckoutService CreateCheckoutService()
         {
-            return new CheckoutService(new EFCheckoutRepository(_config.GetConnectionString()), new EFMediaRepository(_config.GetConnectionString()));
+            switch (_config.GetDatabaseMode())
+            {
+                case DatabaseMode.ORM:
+                    return new CheckoutService(new EFCheckoutRepository(_config.GetConnectionString()), new EFMediaRepository(_config.GetConnectionString()));
+                case DatabaseMode.DirectSQL:
+                    return new CheckoutService(new DCheckoutRepository(_config.GetConnectionString()), new DMediaRepository(_config.GetConnectionString()));
+                default:
+                    throw new Exception("DatabaseMode configuration is off.");
+            }
         }
     }
 }
