@@ -12,18 +12,18 @@ namespace LibraryManagement.Data.Repositories.EF
             _dbContext = new LibraryContext(connectionString);
         }
 
-        public void Add(Borrower newBorrower)
+        public int Add(Borrower newBorrower)
         {
-            // a failed attempt still generated an ID but it is not to be found anywhere
             _dbContext.Borrower.Add(newBorrower);
             _dbContext.SaveChanges();
+
+            return newBorrower.BorrowerID;
         }
 
 
         public void Update(Borrower request)
         {
-            var borrower = _dbContext.Borrower.
-                FirstOrDefault(b => b.BorrowerID == request.BorrowerID);
+            var borrower = _dbContext.Borrower.FirstOrDefault(b => b.BorrowerID == request.BorrowerID);
 
             if (borrower != null)
             {
@@ -43,8 +43,7 @@ namespace LibraryManagement.Data.Repositories.EF
         public void Delete(Borrower borrower)
         {
 
-            var checkoutLogs = _dbContext.CheckoutLog.
-                Where(cl => cl.BorrowerID == borrower.BorrowerID);
+            var checkoutLogs = _dbContext.CheckoutLog.Where(cl => cl.BorrowerID == borrower.BorrowerID);
 
             _dbContext.Remove(borrower);
             _dbContext.SaveChanges();
