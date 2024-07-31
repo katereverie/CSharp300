@@ -65,12 +65,15 @@ namespace LibraryManagement.ConsoleUI.IO
                     break;
                 } while (true);
 
-                CheckoutLog newLog = new CheckoutLog();
-                newLog.BorrowerID = getBorrowerResult.Data.BorrowerID;
-                newLog.MediaID = mediaID;
-                newLog.CheckoutDate = DateTime.Now;
-                newLog.DueDate = newLog.CheckoutDate.AddDays(7);
-                newLog.ReturnDate = null;
+                CheckoutLog newLog = new CheckoutLog
+                {
+                    BorrowerID = getBorrowerResult.Data.BorrowerID,
+                    MediaID = mediaID,
+                    CheckoutDate = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(7),
+                    ReturnDate = null
+                };
+
 
                 var checkoutResult = serivce.CheckoutMedia(newLog);
                 if (!checkoutResult.Ok)
