@@ -38,7 +38,7 @@ namespace LibraryManagement.Data.Repositories.EF
                              .Where(m => !m.CheckoutLogs.Any() ||
                                          (m.CheckoutLogs.Any() &&
                                           m.CheckoutLogs.OrderByDescending(cl => cl.CheckoutLogID)
-                                                       .First().ReturnDate != null))
+                                                        .First().ReturnDate != null))
                              .ToList();
         }
 
