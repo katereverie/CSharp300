@@ -14,12 +14,13 @@ namespace LibraryManagement.Data.Repositories.Dapper
             _cnString = connectionString;
         }
 
-        public void Add(Borrower newBorrower)
+        public int Add(Borrower newBorrower)
         {
             using (var cn = new SqlConnection(_cnString))
             {
                 var command = @"INSERT INTO Borrower (FirstName, LastName, Email, Phone)
-                                VALUES (@FirstName, @LastName, @Email, @Phone)";
+                                VALUES (@FirstName, @LastName, @Email, @Phone)
+                                SELECT SCOPE_IDENTITY()";
                 var parameters = new
                 {
                     newBorrower.FirstName,
@@ -30,11 +31,12 @@ namespace LibraryManagement.Data.Repositories.Dapper
 
                 try
                 {
-                    cn.Execute(command, parameters);
+                    return cn.ExecuteScalar<int>(command, parameters);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
+                    return -1;
                 }
             }
         }
@@ -96,12 +98,8 @@ namespace LibraryManagement.Data.Repositories.Dapper
                     var command = @"SELECT *
                                   FROM Borrower
                                   WHERE Email = @Email";
-                    var parameter = new
-                    {
-                        Email = email
-                    };
 
-                    borrower = cn.QueryFirstOrDefault<Borrower>(command, parameter);
+                    borrower = cn.QueryFirstOrDefault<Borrower>(command, new { Email = email });
                 }
             }
             catch (Exception ex)
