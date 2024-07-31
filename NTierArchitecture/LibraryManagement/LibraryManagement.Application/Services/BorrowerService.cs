@@ -34,7 +34,7 @@ namespace LibraryManagement.Application.Services
                 var borrower = _borrowerRepository.GetByEmail(email);
 
                 return borrower is null ?
-                    ResultFactory.Fail<Borrower>($"Borrower with Email:{email} not found!") :
+                    ResultFactory.Fail<Borrower>($"Borrower registered with {email} not found!") :
                     ResultFactory.Success(borrower);
             }
             catch (Exception ex)
@@ -56,22 +56,28 @@ namespace LibraryManagement.Application.Services
             }
         }
 
-        public Result AddBorrower(Borrower newBorrower)
+        public Result<int> AddBorrower(Borrower newBorrower)
         {
             try
             {
                 var duplicate = _borrowerRepository.GetByEmail(newBorrower.Email);
                 if (duplicate != null)
                 {
-                    return ResultFactory.Fail($"Borrower with email: {newBorrower.Email} already exists!");
+                    return ResultFactory.Fail<int>($"{newBorrower.Email} has already been taken!");
                 }
 
-                _borrowerRepository.Add(newBorrower);
-                return ResultFactory.Success();
+                int newID = _borrowerRepository.Add(newBorrower);
+                switch (newID)
+                {
+                    case -1:
+                        return ResultFactory.Fail<int>("New Borrower Registration failed.");
+                    default:
+                        return ResultFactory.Success(newID);
+                }
             }
             catch (Exception ex)
             {
-                return ResultFactory.Fail(ex.Message);
+                return ResultFactory.Fail<int>(ex.Message);
             }
         }
 
