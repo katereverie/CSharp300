@@ -67,9 +67,10 @@ namespace LibraryManagement.Application.Services
             {
                 var list = _checkoutRepository.GetAllCheckedoutMedia();
 
-                return list is null ?
-                       ResultFactory.Fail<List<CheckoutLog>>("No such list found.") :
-                       ResultFactory.Success(list);
+                return list.Any() ?
+                            ResultFactory.Success(list) :
+                            ResultFactory.Fail<List<CheckoutLog>>("No such list found.");
+                       
             }
             catch (Exception ex)
             {
@@ -101,7 +102,7 @@ namespace LibraryManagement.Application.Services
                 var borrower = _checkoutRepository.GetBorrowerByEmail(email);
 
                 return borrower is null ?
-                       ResultFactory.Fail<Borrower>($"No Borrower with Email: {email} found.") :
+                       ResultFactory.Fail<Borrower>($"No Borrower with {email} found.") :
                        ResultFactory.Success(borrower);
             }
             catch (Exception ex)
