@@ -51,10 +51,10 @@ namespace LibraryManagement.Data.Repositories.Dapper
                     try
                     {
                         var deleteCheckoutLogsCommand = "DELETE FROM CheckoutLog WHERE BorrowerID = @BorrowerID";
-                        cn.Execute(deleteCheckoutLogsCommand, new { BorrowerID = borrower.BorrowerID }, transaction);
+                        cn.Execute(deleteCheckoutLogsCommand, new { borrower.BorrowerID }, transaction);
 
                         var deleteBorrowerCommand = "DELETE FROM Borrower WHERE BorrowerID = @BorrowerID";
-                        cn.Execute(deleteBorrowerCommand, new { BorrowerID = borrower.BorrowerID }, transaction);
+                        cn.Execute(deleteBorrowerCommand, new { borrower.BorrowerID }, transaction);
 
                         transaction.Commit();
                     }
@@ -89,7 +89,7 @@ namespace LibraryManagement.Data.Repositories.Dapper
 
         public Borrower? GetByEmail(string email)
         {
-            Borrower? borrower = new Borrower();
+            Borrower? borrower = new();
 
             try
             {
@@ -109,6 +109,41 @@ namespace LibraryManagement.Data.Repositories.Dapper
 
             return borrower;
         }
+
+        public List<CheckoutLog> GetCheckoutLogs(Borrower borrower)
+        {
+            List<CheckoutLog> list = new();
+
+            try
+            {
+                using (var cn = new SqlConnection(_cnString))
+                {
+                    var command = @"SELECT cl.CheckoutLogID, cl.BorrowerID, cl.MediaID, cl.CheckoutDate, cl.DueDate, cl.ReturnDate,
+                                           m.MediaID, m.MediaTypeID, m.Title, m.IsArchived
+                                    FROM CheckoutLog cl
+                                    INNER JOIN Media m ON m.MediaID = cl.MediaID
+                                    WHERE cl.BorrowerID = @BorrowerID";
+
+                    list = cn.Query<CheckoutLog, Media, CheckoutLog>(
+                        command,
+                        (cl, m) =>
+                        {
+                            cl.Media = m;
+                            return cl;
+                        },
+                        new { borrower.BorrowerID },
+                        splitOn: "MediaID"
+                    ).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return list;
+        }
+
 
         public void Update(Borrower request)
         {
