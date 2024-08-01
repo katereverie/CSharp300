@@ -8,7 +8,7 @@ namespace LibraryManagement.Core.Interfaces.Repositories
         List<CheckoutLog> GetCheckoutLogsByBorrowerID(int borrowerID);
         List<CheckoutLogDto> GetCheckedoutMediaByBorrowerID(int borrowerID);
         List<CheckoutLog> GetAllCheckedoutMedia();
-        Borrower? GetBorrowerByEmail(string email);
+        Borrower? GetByEmail(string email);
         void Update(int checkoutLogID);
         int Add(CheckoutLog newCheckoutLog);
     }

@@ -81,7 +81,7 @@ namespace LibraryManagement.Data.Repositories.Dapper
         }
 
 
-        public Borrower? GetBorrowerByEmail(string email)
+        public Borrower? GetByEmail(string email)
         {
             Borrower? borrower = null;
 

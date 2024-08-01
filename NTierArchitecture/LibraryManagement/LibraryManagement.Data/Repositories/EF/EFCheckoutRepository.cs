@@ -74,7 +74,7 @@ namespace LibraryManagement.Data.Repositories.EF
             }
         }
 
-        public Borrower? GetBorrowerByEmail(string email)
+        public Borrower? GetByEmail(string email)
         {
             return _dbContext.Borrower
                              .FirstOrDefault(b => b.Email == email);

@@ -99,7 +99,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var borrower = _checkoutRepository.GetBorrowerByEmail(email);
+                var borrower = _checkoutRepository.GetByEmail(email);
 
                 return borrower is null ?
                        ResultFactory.Fail<Borrower>($"No Borrower with {email} found.") :
