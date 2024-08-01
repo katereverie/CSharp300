@@ -1,5 +1,6 @@
 ﻿using LibraryManagement.Core.Entities;
 using LibraryManagement.Core.Interfaces.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Data.Repositories.EF
 {
@@ -53,20 +54,6 @@ namespace LibraryManagement.Data.Repositories.EF
                 _dbContext.RemoveRange(checkoutLogs);
                 _dbContext.SaveChanges();
             }
-
-            // explicit transaction
-            //using (var transaction = _dbContext.Database.BeginTransaction())
-            //{
-            //    _dbContext.Borrower
-            //        .Where(b => b.BorrowerID == borrowerID)
-            //        .ExecuteDelete();
-
-            //    _dbContext.CheckoutLog
-            //        .Where(cl => cl.BorrowerID == borrowerID)
-            //        .ExecuteDelete();
-
-            //    transaction.Commit();
-            //}
         }
 
         public List<Borrower> GetAll()
@@ -77,6 +64,15 @@ namespace LibraryManagement.Data.Repositories.EF
         public Borrower? GetByEmail(string email)
         {
             return _dbContext.Borrower.FirstOrDefault(b => b.Email == email);
+        }
+
+        public List<CheckoutLog> GetCheckoutLogs(Borrower borrower)
+        {
+            return _dbContext.CheckoutLog
+                             .Include("Media")
+                             .Include("Borrower")
+                             .Where(cl => cl.BorrowerID == borrower.BorrowerID)
+                             .ToList();
         }
     }
 }
