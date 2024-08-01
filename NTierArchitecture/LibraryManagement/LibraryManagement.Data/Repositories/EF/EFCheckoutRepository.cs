@@ -61,17 +61,20 @@ namespace LibraryManagement.Data.Repositories.EF
                              .ToList();
         }
 
-        public void Update(int checkoutLogID)
+        public bool Update(int checkoutLogID)
         {
             var checkoutLog = _dbContext.CheckoutLog
                               .FirstOrDefault(cl => cl.CheckoutLogID == checkoutLogID);
 
-            if (checkoutLog != null)
+            if (checkoutLog is not null)
             {
                 checkoutLog.ReturnDate = DateTime.Now;
 
                 _dbContext.SaveChanges();
+                return true;
             }
+            
+            return false;
         }
 
         public Borrower? GetByEmail(string email)

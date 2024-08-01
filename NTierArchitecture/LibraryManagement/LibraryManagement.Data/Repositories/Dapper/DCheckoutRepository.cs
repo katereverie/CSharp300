@@ -183,7 +183,7 @@ namespace LibraryManagement.Data.Repositories.Dapper
             return list;
         }
 
-        public void Update(int checkoutLogID)
+        public bool Update(int checkoutLogID)
         {
             try
             {
@@ -201,10 +201,13 @@ namespace LibraryManagement.Data.Repositories.Dapper
 
                     cn.Execute(command, parameters);
                 }
+
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                return false;
             }
         }
     }

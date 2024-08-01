@@ -164,9 +164,9 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                _checkoutRepository.Update(checkoutLogID);
-
-                return ResultFactory.Success();
+                return _checkoutRepository.Update(checkoutLogID)
+                    ? ResultFactory.Success()
+                    : ResultFactory.Fail("Return attempt failed.");
             }
             catch (Exception ex)
             {
