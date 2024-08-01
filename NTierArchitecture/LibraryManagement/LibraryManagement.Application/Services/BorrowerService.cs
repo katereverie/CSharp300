@@ -17,9 +17,8 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var borrowers = _borrowerRepo.GetAll();
-                return ResultFactory.Success(borrowers);
-
+                var list = _borrowerRepo.GetAll();
+                return ResultFactory.Success(list);
             }
             catch (Exception ex)
             {
