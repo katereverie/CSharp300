@@ -6,18 +6,18 @@ namespace LibraryManagement.Application.Services
 {
     public class BorrowerService : IBorrowerService
     {
-        private IBorrowerRepository _borrowerRepository;
+        private IBorrowerRepository _borrowerRepo;
 
         public BorrowerService(IBorrowerRepository borrowerRepository)
         {
-            _borrowerRepository = borrowerRepository;
+            _borrowerRepo = borrowerRepository;
         }
 
         public Result<List<Borrower>> GetAllBorrowers()
         {
             try
             {
-                var borrowers = _borrowerRepository.GetAll();
+                var borrowers = _borrowerRepo.GetAll();
                 return ResultFactory.Success(borrowers);
 
             }
@@ -31,7 +31,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var borrower = _borrowerRepository.GetByEmail(email);
+                var borrower = _borrowerRepo.GetByEmail(email);
 
                 return borrower is null ?
                     ResultFactory.Fail<Borrower>($"Borrower registered with {email} not found!") :
@@ -47,7 +47,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                _borrowerRepository.Update(borrower);
+                _borrowerRepo.Update(borrower);
                 return ResultFactory.Success();
             }
             catch (Exception ex)
@@ -60,13 +60,13 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var duplicate = _borrowerRepository.GetByEmail(newBorrower.Email);
+                var duplicate = _borrowerRepo.GetByEmail(newBorrower.Email);
                 if (duplicate != null)
                 {
                     return ResultFactory.Fail<int>($"{newBorrower.Email} has already been taken!");
                 }
 
-                int newID = _borrowerRepository.Add(newBorrower);
+                int newID = _borrowerRepo.Add(newBorrower);
                 switch (newID)
                 {
                     case -1:
@@ -85,7 +85,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                _borrowerRepository.Delete(borrower);
+                _borrowerRepo.Delete(borrower);
                 return ResultFactory.Success();
             }
             catch (Exception ex)
@@ -93,6 +93,20 @@ namespace LibraryManagement.Application.Services
                 return ResultFactory.Fail(ex.Message);
             }
 
-        } 
+        }
+
+        public Result<List<CheckoutLog>> GetCheckoutLogsByBorrower(Borrower borrower)
+        {
+            try
+            {
+                var list = _borrowerRepo.GetCheckoutLogs(borrower);
+
+                return ResultFactory.Success(list);
+            }
+            catch (Exception ex)
+            {
+                return ResultFactory.Fail<List<CheckoutLog>>(ex.Message);
+            }
+        }
     }
 }
