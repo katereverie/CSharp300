@@ -231,30 +231,34 @@ namespace LibraryManagement.Data.Repositories.Dapper
             return media;
         }
 
-        public void Update(Media request)
+        public bool Update(Media request)
         {
-            using (var cn = new SqlConnection(_cnString))
+            try
             {
-                var command = @"UPDATE [Media] SET
+                using (var cn = new SqlConnection(_cnString))
+                {
+                    var command = @"UPDATE [Media] SET
                                         MediaTypeID = @MediaTypeID,
                                         Title = @Title
                                 WHERE MediaID = @MediaID";
-                var parameters = new
-                {
-                    request.MediaTypeID,
-                    request.Title,
-                    request.MediaID,
-                };
+                    var parameters = new
+                    {
+                        request.MediaTypeID,
+                        request.Title,
+                        request.MediaID,
+                    };
 
-                try
-                {
                     cn.Execute(command, parameters);
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
+
+                return true;
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+
         }
     }
 }

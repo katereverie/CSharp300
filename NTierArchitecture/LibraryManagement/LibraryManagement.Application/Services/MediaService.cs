@@ -50,8 +50,9 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                _mediaRepository.Update(request);
-                return ResultFactory.Success();
+                return _mediaRepository.Update(request)
+                    ? ResultFactory.Success()
+                    : ResultFactory.Fail("Update attempt failed.");
             }
             catch (Exception ex)
             {

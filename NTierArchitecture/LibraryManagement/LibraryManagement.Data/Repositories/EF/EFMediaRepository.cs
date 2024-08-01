@@ -21,7 +21,7 @@ namespace LibraryManagement.Data.Repositories.EF
             return newMedia.MediaID;
         }
 
-        public void Update(Media request)
+        public bool Update(Media request)
         {
             var media = _dbContext.Media.FirstOrDefault(m => m.MediaID == request.MediaID);
 
@@ -31,7 +31,10 @@ namespace LibraryManagement.Data.Repositories.EF
                 media.MediaTypeID = request.MediaTypeID;
 
                 _dbContext.SaveChanges();
+                return true;
             }
+
+            return false;
         }
 
         public bool Archive(int mediaID)
