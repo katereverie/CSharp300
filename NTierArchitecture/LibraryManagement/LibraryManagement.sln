@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagement.ConsoleUI", "LibraryManagement.ConsoleUI\LibraryManagement.ConsoleUI.csproj", "{D2231FDD-91B6-4A09-BF0C-59BE1E2DB536}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryManagement.ConsoleUI", "LibraryManagement.ConsoleUI\LibraryManagement.ConsoleUI.csproj", "{D2231FDD-91B6-4A09-BF0C-59BE1E2DB536}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagement.Core", "LibraryManagement.Core\LibraryManagement.Core.csproj", "{8032B18A-CFAE-4EB8-8E80-35AB622DE0EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryManagement.Core", "LibraryManagement.Core\LibraryManagement.Core.csproj", "{8032B18A-CFAE-4EB8-8E80-35AB622DE0EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagement.Data", "LibraryManagement.Data\LibraryManagement.Data.csproj", "{C21C1B69-AA79-48D2-9DAF-AC442B2B6126}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryManagement.Data", "LibraryManagement.Data\LibraryManagement.Data.csproj", "{C21C1B69-AA79-48D2-9DAF-AC442B2B6126}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagement.Application", "LibraryManagement.Application\LibraryManagement.Application.csproj", "{D0583976-AB12-4761-8E22-3DF4C13B1DFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryManagement.Application", "LibraryManagement.Application\LibraryManagement.Application.csproj", "{D0583976-AB12-4761-8E22-3DF4C13B1DFB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagement.Test", "LibraryManagement.Test\LibraryManagement.Test.csproj", "{CC9F50DE-ADF3-4482-92AE-2CA08CCEB224}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{D0583976-AB12-4761-8E22-3DF4C13B1DFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0583976-AB12-4761-8E22-3DF4C13B1DFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0583976-AB12-4761-8E22-3DF4C13B1DFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC9F50DE-ADF3-4482-92AE-2CA08CCEB224}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC9F50DE-ADF3-4482-92AE-2CA08CCEB224}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC9F50DE-ADF3-4482-92AE-2CA08CCEB224}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC9F50DE-ADF3-4482-92AE-2CA08CCEB224}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
