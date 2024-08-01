@@ -31,36 +31,37 @@ namespace LibraryManagement.ConsoleUI.IO
         {
             Console.Clear();
             var email = Utilities.GetRequiredString("Enter borrower email: ");
-            var result = service.GetBorrower(email);
+            var getBorrowerResult = service.GetBorrower(email);
 
-            if (result.Ok && result.Data != null)
+            if (!getBorrowerResult.Ok)
             {
-                Console.WriteLine($"Id: {result.Data.BorrowerID}");
-                Console.WriteLine($"Name: {result.Data.LastName}, {result.Data.FirstName}");
-                Console.WriteLine($"Email: {result.Data.Email}");
-                if (result.Data.CheckoutLogs != null)
-                {
-                    Console.WriteLine("Checkout Record");
-                    Console.WriteLine(new string('=', 60));
-                    Console.WriteLine($"{"Media ID", -10} {"Title", -20} {"Checkout Date", -40} {"Return Date", -55}");
-                    foreach (var cl in result.Data.CheckoutLogs)
-                    {
-                        Console.WriteLine($"{cl.MediaID, -10} " +
-                            $"{cl.Media.Title, -20} " +
-                            $"{cl.CheckoutDate, -40} " +
-                            $"{(cl.ReturnDate is null ? "Unreturned" : cl.ReturnDate), -55} ");
-                    }
+                Console.WriteLine(getBorrowerResult.Message);
+                return;
+            }
 
-                    Console.WriteLine();
-                }
-                else
+            var getCheckoutLogsResult = service.GetCheckoutLogsByBorrower(getBorrowerResult.Data);
+
+            Console.WriteLine($"Id: {getBorrowerResult.Data.BorrowerID}");
+            Console.WriteLine($"Name: {getBorrowerResult.Data.LastName}, {getBorrowerResult.Data.FirstName}");
+            Console.WriteLine($"Email: {getBorrowerResult.Data.Email}");
+            if (getCheckoutLogsResult.Data.Any())
+            {
+                Console.WriteLine("Checkout Record");
+                Console.WriteLine(new string('=', 100));
+                Console.WriteLine($"{"Media ID", -10} {"Title", -40} {"Checkout Date", -20} {"Return Date", -20}");
+                foreach (var cl in getCheckoutLogsResult.Data)
                 {
-                    Console.WriteLine("No Checkout Record.");
+                    Console.WriteLine($"{cl.MediaID, -10} " +
+                        $"{cl.Media.Title, -40} " +
+                        $"{cl.CheckoutDate, -20:MM/dd/yyyy} " +
+                        $"{(cl.ReturnDate is null ? "Unreturned" : cl.ReturnDate), -20:MM/dd/yyyy}");
                 }
+
+                Console.WriteLine();
             }
             else
             {
-                Console.WriteLine(result.Message);
+                Console.WriteLine("No Checkout Record.");
             }
 
             Utilities.AnyKey();
