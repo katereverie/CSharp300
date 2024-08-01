@@ -148,7 +148,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var media = _mediaRepository.GetMediaById(mediaID);
+                var media = _mediaRepository.GetByID(mediaID);
 
                 return media is null ?
                        ResultFactory.Fail<Media>($"No media by ID: {mediaID} found.") :

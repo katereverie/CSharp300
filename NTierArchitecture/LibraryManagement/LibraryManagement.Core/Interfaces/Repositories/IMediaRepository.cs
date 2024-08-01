@@ -11,8 +11,8 @@ namespace LibraryManagement.Core.Interfaces.Repositories
         List<Media> GetAllUnarchived();
         List<Media> GetUnarchivedByType(int typeID);
         List<Media> GetAllArchived();
-        List<Media> GetMediaByType(int mediaTypeID);
+        List<Media> GetByType(int mediaTypeID);
         List<MediaCheckoutCount> GetTopThreeMostPopularMedia();
-        Media? GetMediaById(int mediaId);
+        Media? GetByID(int mediaId);  
     }
 }

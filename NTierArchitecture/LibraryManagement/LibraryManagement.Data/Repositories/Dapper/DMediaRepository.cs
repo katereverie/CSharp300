@@ -136,7 +136,7 @@ namespace LibraryManagement.Data.Repositories.Dapper
             return list;
         }
 
-        public Media? GetMediaById(int mediaID)
+        public Media? GetByID(int mediaID)
         {
             Media? media = new();
 
@@ -159,7 +159,7 @@ namespace LibraryManagement.Data.Repositories.Dapper
             return media;
         }
 
-        public List<Media> GetMediaByType(int mediaTypeID)
+        public List<Media> GetByType(int mediaTypeID)
         {
             List<Media> media = new();
 

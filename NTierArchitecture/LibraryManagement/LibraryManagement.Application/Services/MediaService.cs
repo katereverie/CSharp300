@@ -80,7 +80,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var media = _mediaRepository.GetMediaById(mediaID);
+                var media = _mediaRepository.GetByID(mediaID);
                 if (media != null)
                 {
                     return ResultFactory.Success(media);
@@ -100,7 +100,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var list = _mediaRepository.GetMediaByType(typeId);
+                var list = _mediaRepository.GetByType(typeId);
 
                 if (list != null)
                 {

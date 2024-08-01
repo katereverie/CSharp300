@@ -56,12 +56,12 @@ namespace LibraryManagement.Data.Repositories.EF
             return _dbContext.Media.ToList();
         }
 
-        public Media? GetMediaById(int mediaId)
+        public Media? GetByID(int mediaId)
         {
             return _dbContext.Media.FirstOrDefault(m => m.MediaID == mediaId);
         }
 
-        public List<Media> GetMediaByType(int typeId)
+        public List<Media> GetByType(int typeId)
         {
             return _dbContext.Media
                              .Where(m => m.MediaTypeID == typeId)
