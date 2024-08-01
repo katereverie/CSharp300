@@ -6,20 +6,20 @@ namespace LibraryManagement.Application.Services
 {
     public class CheckoutService : ICheckoutService
     {
-        private ICheckoutRepository _checkoutRepository;
-        private IMediaRepository _mediaRepository;
+        private ICheckoutRepository _checkoutRepo;
+        private IMediaRepository _mediaRepo;
 
         public CheckoutService(ICheckoutRepository checkoutRepository, IMediaRepository mediaRepository)
         {
-            _checkoutRepository = checkoutRepository;
-            _mediaRepository = mediaRepository;
+            _checkoutRepo = checkoutRepository;
+            _mediaRepo = mediaRepository;
         }
 
         public Result CheckBorrowStatus(int borrowerID)
         {
             try
             {
-                var logs = _checkoutRepository.GetCheckoutLogsByBorrowerID(borrowerID);
+                var logs = _checkoutRepo.GetCheckoutLogsByBorrowerID(borrowerID);
                 int checkedoutItemCount = 0;
 
                 foreach (var log in logs)
@@ -51,7 +51,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var newID = _checkoutRepository.Add(newCheckoutLog);
+                var newID = _checkoutRepo.Add(newCheckoutLog);
 
                 return newID != 0 && newID != -1
                     ? ResultFactory.Success(newID)
@@ -67,7 +67,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var list = _checkoutRepository.GetAllCheckedoutMedia();
+                var list = _checkoutRepo.GetAllCheckedoutMedia();
 
                 return list.Any()
                     ? ResultFactory.Success(list) 
@@ -83,7 +83,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var list = _checkoutRepository.GetUncheckedoutUnarchivedMedia();
+                var list = _checkoutRepo.GetUncheckedoutUnarchivedMedia();
 
                 return list.Any() 
                     ? ResultFactory.Success(list)
@@ -99,7 +99,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var borrower = _checkoutRepository.GetByEmail(email);
+                var borrower = _checkoutRepo.GetByEmail(email);
 
                 return borrower is null ?
                        ResultFactory.Fail<Borrower>($"No Borrower with {email} found.") :
@@ -115,7 +115,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var list = _checkoutRepository.GetCheckedoutMediaByBorrowerID(borrowerID);
+                var list = _checkoutRepo.GetCheckedoutMediaByBorrowerID(borrowerID);
 
                 return list.Any(log => log is not null) 
                     ? ResultFactory.Success(list)
@@ -132,7 +132,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var list = _checkoutRepository.GetCheckoutLogsByBorrowerID(borrowerID);
+                var list = _checkoutRepo.GetCheckoutLogsByBorrowerID(borrowerID);
 
                 return list is not null
                     ? ResultFactory.Success(list)
@@ -148,7 +148,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var media = _mediaRepository.GetByID(mediaID);
+                var media = _mediaRepo.GetByID(mediaID);
 
                 return media is not null
                     ? ResultFactory.Success(media)
@@ -164,7 +164,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                return _checkoutRepository.Update(checkoutLogID)
+                return _checkoutRepo.Update(checkoutLogID)
                     ? ResultFactory.Success()
                     : ResultFactory.Fail("Return attempt failed.");
             }

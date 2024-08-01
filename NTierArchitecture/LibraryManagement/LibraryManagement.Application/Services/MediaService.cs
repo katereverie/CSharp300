@@ -6,18 +6,18 @@ namespace LibraryManagement.Application.Services
 {
     public class MediaService : IMediaService
     {
-        private IMediaRepository _mediaRepository;
+        private IMediaRepository _mediaRepo;
 
         public MediaService(IMediaRepository mediaRepository)
         {
-            _mediaRepository = mediaRepository;
+            _mediaRepo = mediaRepository;
         }
 
         public Result<int> AddMedia(Media newMedia)
         {
             try
             {
-                int newID = _mediaRepository.Add(newMedia);
+                int newID = _mediaRepo.Add(newMedia);
                 return ResultFactory.Success(newID);
             }
             catch (Exception ex)
@@ -30,7 +30,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var isArchived = _mediaRepository.Archive(mediaID);
+                var isArchived = _mediaRepo.Archive(mediaID);
                 if (isArchived)
                 {
                     return ResultFactory.Success();
@@ -50,7 +50,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                return _mediaRepository.Update(request)
+                return _mediaRepo.Update(request)
                     ? ResultFactory.Success()
                     : ResultFactory.Fail("Update attempt failed.");
             }
@@ -64,7 +64,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var list = _mediaRepository.GetAllArchived();
+                var list = _mediaRepo.GetAllArchived();
 
                 return list.Any() ?
                        ResultFactory.Success(list) :
@@ -81,7 +81,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var media = _mediaRepository.GetByID(mediaID);
+                var media = _mediaRepo.GetByID(mediaID);
                 if (media != null)
                 {
                     return ResultFactory.Success(media);
@@ -101,7 +101,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var list = _mediaRepository.GetByType(typeId);
+                var list = _mediaRepo.GetByType(typeId);
 
                 if (list != null)
                 {
@@ -122,7 +122,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var list = _mediaRepository.GetTopThreeMostPopularMedia();
+                var list = _mediaRepo.GetTopThreeMostPopularMedia();
 
                 return list is null ?
                     ResultFactory.Fail<List<MediaCheckoutCount>>("Top 3 Most Popular Media not found.") :
@@ -138,7 +138,7 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var list = _mediaRepository.GetUnarchivedByType(typeID);
+                var list = _mediaRepo.GetUnarchivedByType(typeID);
                 if (list != null)
                 {
                     return ResultFactory.Success(list);
