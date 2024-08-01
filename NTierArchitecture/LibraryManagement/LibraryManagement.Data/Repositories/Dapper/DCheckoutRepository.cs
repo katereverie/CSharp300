@@ -51,14 +51,14 @@ namespace LibraryManagement.Data.Repositories.Dapper
             {
                 using (var cn = new SqlConnection(_cnString))
                 {
-                    var command = @"
-                                    SELECT cl.CheckoutLogID, cl.BorrowerID, cl.MediaID, cl.CheckoutDate, cl.DueDate, cl.ReturnDate,
+                    var command = @"SELECT cl.CheckoutLogID, cl.BorrowerID, cl.MediaID, cl.CheckoutDate, cl.DueDate, cl.ReturnDate,
                                            b.BorrowerID, b.FirstName, b.LastName, b.Email, b.Phone,
                                            m.MediaID, m.MediaTypeID, m.Title, m.IsArchived
                                     FROM CheckoutLog cl
                                     INNER JOIN Borrower b ON b.BorrowerID = cl.BorrowerID
                                     INNER JOIN Media m ON m.MediaID = cl.MediaID
                                     WHERE cl.ReturnDate IS NULL";
+                                    
 
                     list = cn.Query<CheckoutLog, Borrower, Media, CheckoutLog>(
                         command,
