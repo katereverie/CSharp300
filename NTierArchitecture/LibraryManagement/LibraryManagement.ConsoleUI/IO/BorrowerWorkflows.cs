@@ -14,6 +14,8 @@ namespace LibraryManagement.ConsoleUI.IO
             if (!result.Ok)
             {
                 Console.WriteLine(result.Message);
+                Utilities.AnyKey();
+                return;
             }
             else if (result.Data is not null && result.Data.Any())
             {
@@ -51,9 +53,9 @@ namespace LibraryManagement.ConsoleUI.IO
                 var getCheckoutLogsResult = service.GetCheckoutLogsByBorrower(getBorrowerResult.Data);
                 if (!getCheckoutLogsResult.Ok)
                 {
-                    Console.WriteLine(getBorrowerResult.Message);
+                    Console.WriteLine(getCheckoutLogsResult.Message);
                 }
-                else if (getCheckoutLogsResult.Data.Any())
+                else 
                 {
                     Console.WriteLine("Checkout Record");
                     Console.WriteLine(new string('=', 100));
@@ -67,10 +69,6 @@ namespace LibraryManagement.ConsoleUI.IO
                     }
 
                     Console.WriteLine();
-                }
-                else
-                {
-                    Console.WriteLine("No checkout records.");
                 }
             }
 
@@ -88,15 +86,15 @@ namespace LibraryManagement.ConsoleUI.IO
             newBorrower.Email = Utilities.GetRequiredString("Email: ");
             newBorrower.Phone = Utilities.GetRequiredString("Phone: ");
 
-            var result = service.AddBorrower(newBorrower);
+            var addResult = service.AddBorrower(newBorrower);
 
-            if (result.Ok)
+            if (addResult.Ok)
             {
-                Console.WriteLine($"New Borrower successfully registered with the ID {result.Data}");
+                Console.WriteLine($"New Borrower successfully registered with the ID {addResult.Data}");
             }
             else
             {
-                Console.WriteLine(result.Message);
+                Console.WriteLine(addResult.Message);
             }
 
             Utilities.AnyKey();
@@ -106,11 +104,11 @@ namespace LibraryManagement.ConsoleUI.IO
         {
             Console.Clear();
 
-            var getResult = service.GetBorrower(Utilities.GetRequiredString("Enter the Email of the Borrower to be edited: "));
+            var getBorrowerResult = service.GetBorrower(Utilities.GetRequiredString("Enter the Email of the Borrower to be edited: "));
 
-            if (!getResult.Ok || getResult.Data == null)
+            if (!getBorrowerResult.Ok || getBorrowerResult.Data == null)
             {
-                Console.WriteLine(getResult.Message);    
+                Console.WriteLine(getBorrowerResult.Message);    
             }
             else
             {
@@ -139,15 +137,15 @@ namespace LibraryManagement.ConsoleUI.IO
                 }
                 else if (option == 5)
                 {
-                    getResult.Data.FirstName = Utilities.GetRequiredString("Enter new first name: ");
-                    getResult.Data.LastName = Utilities.GetRequiredString("Enter new last name:");
+                    getBorrowerResult.Data.FirstName = Utilities.GetRequiredString("Enter new first name: ");
+                    getBorrowerResult.Data.LastName = Utilities.GetRequiredString("Enter new last name:");
                     do
                     {
                         string newEmail = Utilities.GetRequiredString("Enter new Email address: ");
                         var duplicateResult = service.GetBorrower(newEmail);
                         if (duplicateResult.Data == null)
                         {
-                            getResult.Data.Email = newEmail;
+                            getBorrowerResult.Data.Email = newEmail;
                             break;
                         } 
                         else
@@ -156,11 +154,11 @@ namespace LibraryManagement.ConsoleUI.IO
                         }
                     } while (true);
 
-                    getResult.Data.Phone = Utilities.GetRequiredString("Enter new phone number:");
+                    getBorrowerResult.Data.Phone = Utilities.GetRequiredString("Enter new phone number:");
                 }
                 else if (option == 4)
                 {
-                    getResult.Data.Phone = Utilities.GetRequiredString("Enter new phone number: ");
+                    getBorrowerResult.Data.Phone = Utilities.GetRequiredString("Enter new phone number: ");
                 }
                 else if (option == 3)
                 {
@@ -170,7 +168,7 @@ namespace LibraryManagement.ConsoleUI.IO
                         var duplicateResult = service.GetBorrower(newEmail);
                         if (duplicateResult.Data == null)
                         {
-                            getResult.Data.Email = newEmail;
+                            getBorrowerResult.Data.Email = newEmail;
                             break;
                         }
                         else
@@ -184,15 +182,15 @@ namespace LibraryManagement.ConsoleUI.IO
                     switch (option)
                     {
                         case 1:
-                            getResult.Data.FirstName = Utilities.GetRequiredString("Enter new first name: ");
+                            getBorrowerResult.Data.FirstName = Utilities.GetRequiredString("Enter new first name: ");
                             break;
                         case 2:
-                            getResult.Data.LastName = Utilities.GetRequiredString("Enter new last name:");
+                            getBorrowerResult.Data.LastName = Utilities.GetRequiredString("Enter new last name:");
                             break;
                     }
                 }
 
-                var finalResult = service.UpdateBorrower(getResult.Data);
+                var finalResult = service.UpdateBorrower(getBorrowerResult.Data);
 
                 if (finalResult.Ok)
                 {
