@@ -18,7 +18,9 @@ namespace LibraryManagement.Application.Services
             try
             {
                 int newID = _mediaRepo.Add(newMedia);
-                return ResultFactory.Success(newID);
+                return newID != 0 && newID != -1
+                    ? ResultFactory.Success(newID)
+                    : ResultFactory.Fail<int>("Add attempt failed.");
             }
             catch (Exception ex)
             {
@@ -103,7 +105,7 @@ namespace LibraryManagement.Application.Services
             {
                 var list = _mediaRepo.GetByType(typeId);
 
-                if (list != null)
+                if (list.Any())
                 {
                     return ResultFactory.Success(list);
                 }
@@ -124,9 +126,10 @@ namespace LibraryManagement.Application.Services
             {
                 var list = _mediaRepo.GetTopThreeMostPopularMedia();
 
-                return list is null ?
-                    ResultFactory.Fail<List<MediaCheckoutCount>>("Top 3 Most Popular Media not found.") :
-                    ResultFactory.Success(list);
+                return list.Any()
+                    ? ResultFactory.Success(list)
+                    : ResultFactory.Fail<List<MediaCheckoutCount>>("Top 3 Most Popular Media not found.");
+                    
             }
             catch (Exception ex)
             {
