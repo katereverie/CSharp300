@@ -117,9 +117,9 @@ namespace LibraryManagement.Application.Services
             {
                 var list = _checkoutRepo.GetCheckedoutMediaByBorrowerID(borrowerID);
 
-                return list.Any(log => log is not null) 
+                return list.Any() 
                     ? ResultFactory.Success(list)
-                    : ResultFactory.Fail<List<CheckoutLogDto>>($"Borrower hasn't checked out any media.");
+                    : ResultFactory.Fail<List<CheckoutLogDto>>("Borrower hasn't checked out any media.");
                        
             }
             catch (Exception ex)
@@ -134,7 +134,7 @@ namespace LibraryManagement.Application.Services
             {
                 var list = _checkoutRepo.GetCheckoutLogsByBorrowerID(borrowerID);
 
-                return list is not null
+                return list.Any()
                     ? ResultFactory.Success(list)
                     : ResultFactory.Fail<List<CheckoutLog>>($"No checkout log by Borrrower ID {borrowerID} found.");
             }
