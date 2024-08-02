@@ -46,8 +46,9 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                _borrowerRepo.Update(borrower);
-                return ResultFactory.Success();
+                return _borrowerRepo.Update(borrower)
+                    ? ResultFactory.Success(borrower)
+                    : ResultFactory.Fail("Edit attempt failed.");
             }
             catch (Exception ex)
             {
@@ -84,8 +85,9 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                _borrowerRepo.Delete(borrower);
-                return ResultFactory.Success();
+                return _borrowerRepo.Delete(borrower)
+                    ? ResultFactory.Success()
+                    : ResultFactory.Fail("Delete attempt failed.");
             }
             catch (Exception ex)
             {
@@ -100,7 +102,9 @@ namespace LibraryManagement.Application.Services
             {
                 var list = _borrowerRepo.GetCheckoutLogs(borrower);
 
-                return ResultFactory.Success(list);
+                return list is not null
+                    ? ResultFactory.Success(list)
+                    : ResultFactory.Fail<List<CheckoutLog>>("Borrower has no checkout logs records.");
             }
             catch (Exception ex)
             {
