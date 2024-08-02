@@ -22,7 +22,7 @@ namespace LibraryManagement.Data.Repositories.EF
         }
 
 
-        public void Update(Borrower request)
+        public bool Update(Borrower request)
         {
             var borrower = _dbContext.Borrower.FirstOrDefault(b => b.BorrowerID == request.BorrowerID);
 
@@ -33,27 +33,31 @@ namespace LibraryManagement.Data.Repositories.EF
                 borrower.Email = request.Email;
                 borrower.Phone = request.Phone;
 
-                _dbContext.SaveChanges();
+                return _dbContext.SaveChanges() != 0;
             }
+
+            return false;
         }
 
         /// <summary>
         /// Deletes all data associated with the passed in borrowerID.
         /// </summary>
         /// <param name="borrowerID"></param>
-        public void Delete(Borrower borrower)
+        public bool Delete(Borrower borrower)
         {
 
             var checkoutLogs = _dbContext.CheckoutLog.Where(cl => cl.BorrowerID == borrower.BorrowerID);
 
             _dbContext.Remove(borrower);
-            _dbContext.SaveChanges();
+            int changeCount = _dbContext.SaveChanges();
 
             if (checkoutLogs != null)
             {
                 _dbContext.RemoveRange(checkoutLogs);
                 _dbContext.SaveChanges();
             }
+
+            return changeCount != 0;
         }
 
         public List<Borrower> GetAll()
@@ -66,7 +70,7 @@ namespace LibraryManagement.Data.Repositories.EF
             return _dbContext.Borrower.FirstOrDefault(b => b.Email == email);
         }
 
-        public List<CheckoutLog> GetCheckoutLogs(Borrower borrower)
+        public List<CheckoutLog>? GetCheckoutLogs(Borrower borrower)
         {
             return _dbContext.CheckoutLog
                              .Include("Media")

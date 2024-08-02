@@ -41,7 +41,7 @@ namespace LibraryManagement.Data.Repositories.Dapper
             }
         }
 
-        public void Delete(Borrower borrower)
+        public bool Delete(Borrower borrower)
         {
             using (var cn = new SqlConnection(_cnString))
             {
@@ -57,11 +57,13 @@ namespace LibraryManagement.Data.Repositories.Dapper
                         cn.Execute(deleteBorrowerCommand, new { borrower.BorrowerID }, transaction);
 
                         transaction.Commit();
+                        return true;
                     }
                     catch (Exception ex)
                     {
                         transaction.Rollback();
                         Console.WriteLine(ex.Message);
+                        return false;
                     }
                 }
             }
@@ -110,10 +112,8 @@ namespace LibraryManagement.Data.Repositories.Dapper
             return borrower;
         }
 
-        public List<CheckoutLog> GetCheckoutLogs(Borrower borrower)
+        public List<CheckoutLog>? GetCheckoutLogs(Borrower borrower)
         {
-            List<CheckoutLog> list = new();
-
             try
             {
                 using (var cn = new SqlConnection(_cnString))
@@ -124,7 +124,7 @@ namespace LibraryManagement.Data.Repositories.Dapper
                                     INNER JOIN Media m ON m.MediaID = cl.MediaID
                                     WHERE cl.BorrowerID = @BorrowerID";
 
-                    list = cn.Query<CheckoutLog, Media, CheckoutLog>(
+                    List<CheckoutLog> list = cn.Query<CheckoutLog, Media, CheckoutLog>(
                         command,
                         (cl, m) =>
                         {
@@ -141,11 +141,11 @@ namespace LibraryManagement.Data.Repositories.Dapper
                 Console.WriteLine(ex.Message);
             }
 
-            return list;
+            return null;
         }
 
 
-        public void Update(Borrower request)
+        public bool Update(Borrower request)
         {
 
             using (var cn = new SqlConnection(_cnString))
@@ -168,10 +168,12 @@ namespace LibraryManagement.Data.Repositories.Dapper
                 try
                 {
                     cn.Execute(command, parameters);
+                    return true;
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
+                    return false;
                 }
             }
         }
