@@ -1,6 +1,6 @@
 ﻿namespace LibraryManagement.Core.Entities
 {
-    public class MediaCheckoutCount
+    public class Top3Media
     {
         public int MediaID { get; set; }
         public string MediaTypeName { get; set; }
