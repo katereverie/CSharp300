@@ -49,16 +49,29 @@ namespace LibraryManagement.ConsoleUI.IO
             } while (true);
         }
 
-        public static int GetMediaTypeID(List<MediaType> typeList)
+        public static int GetMediaTypeID(List<MediaType> typeList, string prompt = "Enter media type ID: ")
         {
             do
             {
-                int input = GetPositiveInteger("Enter media type ID: ");
+                int input = GetPositiveInteger(prompt);
                 if (typeList.Any(mt => mt.MediaTypeID == input))
                 {
                     return input;
                 }
                 Console.WriteLine("Invalid media type ID.");
+            } while (true);
+        }
+
+        public static int GetMediaID(List<Media> mediaList, string prompt = "Enter media ID: ")
+        {
+            do
+            {
+                int input = GetPositiveInteger(prompt);
+                if (mediaList.Any(m => m.MediaID == input))
+                {
+                    return input;
+                }
+                Console.WriteLine("Invalid media ID.");
             } while (true);
         }
 
