@@ -40,30 +40,23 @@ namespace LibraryManagement.ConsoleUI.IO
         {
             Console.Clear();
 
-            Media newMedia = new Media();
-            int type = 0;
-
-            do
+            var getTypeResult = service.GetAllMediaTypes();
+            if (!getTypeResult.Ok)
             {
-                Menus.DisplayMediaType();
+                Console.WriteLine(getTypeResult.Message);
+                return;
+            }
 
-                int userInput = Utilities.GetPositiveInteger("Enter media type ID (1-3) or return (4): ");
-                if (userInput == 4)
-                {
-                    return;
-                }
-                else if (userInput >= 1 && userInput <= 3)
-                {
-                    type = userInput;
-                    break;
-                }
+            var typeList = getTypeResult.Data;
 
-                Console.WriteLine("Invalid media type ID.");
-            } while (true);
+            Utilities.PrintMediaTypeList(typeList);
 
-            newMedia.MediaTypeID = type;
-            newMedia.Title = Utilities.GetRequiredString("Enter media title: ");
-            newMedia.IsArchived = false;
+            Media newMedia = new Media
+            {
+                MediaTypeID = Utilities.GetMediaTypeID(typeList),
+                Title = Utilities.GetRequiredString("Enter media title: "),
+                IsArchived = false
+            };
 
             var result = service.AddMedia(newMedia);
 
@@ -83,72 +76,43 @@ namespace LibraryManagement.ConsoleUI.IO
         {
             Console.Clear();
 
-            int choice = 0;
-            do
+            var getTypeResult = service.GetAllMediaTypes();
+            if (!getTypeResult.Ok)
             {
-                Menus.DisplayMediaType();
-
-                int input = Utilities.GetPositiveInteger("Enter the type of media (1-3) to be edited or return (4): ");
-                if (input >= 1 && input <= 4)
-                {
-                    choice = input;
-                    break;
-                }
-                Console.WriteLine("Invalid input");
-            } while (true);
-
-            if (choice == 4)
-            {
+                Console.WriteLine(getTypeResult.Message);
                 return;
             }
+            var typeList = getTypeResult.Data;
 
-            var getResult = service.GetUnarchivedMediaByType(choice);
+            Utilities.PrintMediaTypeList(typeList);
+            int typeID = Utilities.GetMediaTypeID(typeList);
 
+            var getResult = service.GetUnarchivedMediaByType(typeID);
             if (!getResult.Ok)
             {
                 Console.WriteLine(getResult.Message);
             }
             else
             {
-                Utilities.PrintMediaList(getResult.Data);
+                var mediaList = getResult.Data;
 
-                int mediaId = Utilities.GetPositiveInteger("\nEnter the ID of the media you'd like to edit: ");
+                Utilities.PrintMediaList(mediaList);
+                int mediaID = Utilities.GetMediaID(mediaList);
 
-                var verificationResult = service.GetMediaByID(mediaId);
+                var mediaToEdit = mediaList.Find(m => m.MediaID == mediaID);
 
-                if (!verificationResult.Ok)
+                mediaToEdit.Title = Utilities.GetRequiredString("Enter title: ");
+                mediaToEdit.MediaTypeID = Utilities.GetMediaTypeID(typeList, "Enter new type ID: ");
+
+                var editResult = service.EditMedia(mediaToEdit);
+                if (editResult.Ok)
                 {
-                    Console.WriteLine(verificationResult.Message);
+                    Console.WriteLine("Media successfully updated.");
                 }
                 else
                 {
-                    verificationResult.Data.Title = Utilities.GetRequiredString("Enter new Title: ");
-
-                    int newTypeID;
-                    do
-                    {
-                        Menus.DisplayMediaType();
-                        int input = Utilities.GetPositiveInteger("Enter new Type ID (1-3): ");
-                        if (input >= 1 && input <= 3)
-                        {
-                            newTypeID = input;
-                            break;
-                        }
-                        Console.WriteLine($"Invalid Type ID: {input}");
-                    } while (true);
-
-                    verificationResult.Data.MediaTypeID = newTypeID;
-
-                    var editResult = service.EditMedia(verificationResult.Data);
-                    if (editResult.Ok)
-                    {
-                        Console.WriteLine("Media successfully updated.");
-                    }
-                    else
-                    {
-                        Console.WriteLine(editResult.Message);
-                    }
-                }
+                    Console.WriteLine(editResult.Message);
+                }    
             }
 
             Utilities.AnyKey();
