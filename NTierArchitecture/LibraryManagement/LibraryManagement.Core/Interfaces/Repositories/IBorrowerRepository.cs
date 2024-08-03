@@ -8,7 +8,7 @@ namespace LibraryManagement.Core.Interfaces.Repositories
         bool Delete(Borrower borrower);
         bool Update(Borrower request);
         List<Borrower> GetAll(); 
-        List<CheckoutLog>? GetCheckoutLogs(Borrower borrower);
+        List<CheckoutLog> GetCheckoutLogs(Borrower borrower);
         Borrower? GetByEmail(string email);
     }
 }

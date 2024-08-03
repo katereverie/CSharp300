@@ -91,7 +91,7 @@ namespace LibraryManagement.Data.Repositories.Dapper
 
         public Borrower? GetByEmail(string email)
         {
-            Borrower? borrower = new();
+            Borrower? borrower = null;
 
             try
             {
@@ -112,8 +112,10 @@ namespace LibraryManagement.Data.Repositories.Dapper
             return borrower;
         }
 
-        public List<CheckoutLog>? GetCheckoutLogs(Borrower borrower)
+        public List<CheckoutLog> GetCheckoutLogs(Borrower borrower)
         {
+            List<CheckoutLog> logList = new List<CheckoutLog>();  
+
             try
             {
                 using (var cn = new SqlConnection(_cnString))
@@ -124,7 +126,7 @@ namespace LibraryManagement.Data.Repositories.Dapper
                                     INNER JOIN Media m ON m.MediaID = cl.MediaID
                                     WHERE cl.BorrowerID = @BorrowerID";
 
-                    List<CheckoutLog> list = cn.Query<CheckoutLog, Media, CheckoutLog>(
+                    logList = cn.Query<CheckoutLog, Media, CheckoutLog>(
                         command,
                         (cl, m) =>
                         {
@@ -141,7 +143,7 @@ namespace LibraryManagement.Data.Repositories.Dapper
                 Console.WriteLine(ex.Message);
             }
 
-            return null;
+            return logList;
         }
 
 
