@@ -88,17 +88,18 @@ namespace LibraryManagement.ConsoleUI.IO
 
             var getBorrowerResult = service.GetBorrower(Utilities.GetRequiredString("Enter the Email of the Borrower to be edited: "));
 
-            if (!getBorrowerResult.Ok || getBorrowerResult.Data == null)
+            if (!getBorrowerResult.Ok)
             {
                 Console.WriteLine(getBorrowerResult.Message);    
             }
             else
             {
+                Borrower b = getBorrowerResult.Data;
                 int option = 0;
 
-                do
+                while (true) 
                 {
-                    Console.WriteLine("\nBorrower match found.\nHere's a list of edit options.");
+                    Console.WriteLine("\nYou have the following edit options.");
                     Menus.DisplayEditBorrowerOptions();
                     option = Utilities.GetPositiveInteger("Enter edit options (1-5) or return (6): ");
 
@@ -109,78 +110,62 @@ namespace LibraryManagement.ConsoleUI.IO
 
                     Console.WriteLine("Invalid option.");
                     Utilities.AnyKey();
-                    continue;
-
-                } while (true);
-
-                if (option == 6)
-                {
-                    return;
                 }
-                else if (option == 5)
+
+
+                switch (option)
                 {
-                    getBorrowerResult.Data.FirstName = Utilities.GetRequiredString("Enter new first name: ");
-                    getBorrowerResult.Data.LastName = Utilities.GetRequiredString("Enter new last name:");
-                    do
-                    {
-                        string newEmail = Utilities.GetRequiredString("Enter new Email address: ");
-                        var duplicateResult = service.GetBorrower(newEmail);
-                        if (duplicateResult.Data == null)
+                    case 1:
+                        b.FirstName = Utilities.GetRequiredString("Enter new First Name: ");
+                        break;
+                    case 2:
+                        b.LastName = Utilities.GetRequiredString("Enter new Last Name: ");
+                        break;
+                    case 3:
+                        while (true)
                         {
-                            getBorrowerResult.Data.Email = newEmail;
-                            break;
-                        } 
-                        else
-                        {
+                            string newEmail = Utilities.GetRequiredString("Enter new Email address: ");
+                            var duplicateResult = service.GetBorrower(newEmail);
+                            if (duplicateResult.Data == null)
+                            {
+                                b.Email = newEmail;
+                                break;
+                            }
                             Console.WriteLine($"{newEmail} has already been taken.");
                         }
-                    } while (true);
-
-                    getBorrowerResult.Data.Phone = Utilities.GetRequiredString("Enter new phone number:");
-                }
-                else if (option == 4)
-                {
-                    getBorrowerResult.Data.Phone = Utilities.GetRequiredString("Enter new phone number: ");
-                }
-                else if (option == 3)
-                {
-                    do
-                    {
-                        string newEmail = Utilities.GetRequiredString("Enter new Email address: ");
-                        var duplicateResult = service.GetBorrower(newEmail);
-                        if (duplicateResult.Data == null)
+                        break;
+                    case 4:
+                        b.Phone = Utilities.GetRequiredString("Enter new phone number: ");
+                        break;
+                    case 5:
+                        b.FirstName = Utilities.GetRequiredString("Enter new First name: ");
+                        b.LastName = Utilities.GetRequiredString("Enter new Last name:");
+                        while (true)
                         {
-                            getBorrowerResult.Data.Email = newEmail;
-                            break;
-                        }
-                        else
-                        {
+                            string newEmail = Utilities.GetRequiredString("Enter new Email address: ");
+                            var duplicateResult = service.GetBorrower(newEmail);
+                            if (duplicateResult.Data == null)
+                            {
+                                b.Email = newEmail;
+                                break;
+                            }
                             Console.WriteLine($"{newEmail} has already been taken.");
                         }
-                    } while (true);
-                }
-                else
-                {
-                    switch (option)
-                    {
-                        case 1:
-                            getBorrowerResult.Data.FirstName = Utilities.GetRequiredString("Enter new first name: ");
-                            break;
-                        case 2:
-                            getBorrowerResult.Data.LastName = Utilities.GetRequiredString("Enter new last name:");
-                            break;
-                    }
+                        b.Phone = Utilities.GetRequiredString("Enter new phone number:");
+                        break;
+                    case 6:
+                        return;
                 }
 
-                var finalResult = service.UpdateBorrower(getBorrowerResult.Data);
+                var updateResult = service.UpdateBorrower(b);
 
-                if (finalResult.Ok)
+                if (updateResult.Ok)
                 {
                     Console.WriteLine($"Borrower successfully edited.");
                 }
                 else
                 {
-                    Console.WriteLine(finalResult.Message);
+                    Console.WriteLine(updateResult.Message);
                 }
             }
 
@@ -190,11 +175,15 @@ namespace LibraryManagement.ConsoleUI.IO
         public static void DeleteBorrower(IBorrowerService service)
         {
             Console.Clear();
+
             var getResult = service.GetBorrower(Utilities.GetRequiredString("Enter the Email of the borrower to be deleted: "));
 
-            if (getResult.Ok && getResult.Data != null)
+            if (!getResult.Ok)
             {
-                Console.WriteLine($"Borrower with matching Email found.");
+                Console.WriteLine(getResult.Message);
+            }
+            else 
+            {
                 int choice = 0;
 
                 do
@@ -213,24 +202,20 @@ namespace LibraryManagement.ConsoleUI.IO
                 switch (choice)
                 {
                     case 1:
-                        try
+                        var deleteResult = service.DeleteBorrower(getResult.Data);
+                        if (deleteResult.Ok)
                         {
-                            var deleteResult = service.DeleteBorrower(getResult.Data);
                             Console.WriteLine("Borrower successfully deleted.");
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            Console.WriteLine(ex.Message);
+                            Console.WriteLine(deleteResult.Message);
                         }
                         break;
                     case 2:
                         Console.WriteLine("Delete Process cancelled.");
                         break;
                 }
-            }
-            else
-            {
-                Console.WriteLine(getResult.Message);
             }
 
             Utilities.AnyKey();
