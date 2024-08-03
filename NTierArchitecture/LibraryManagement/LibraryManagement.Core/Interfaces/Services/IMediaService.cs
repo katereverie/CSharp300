@@ -7,7 +7,7 @@ namespace LibraryManagement.Core.Interfaces.Services
         Result<List<Media>> GetMediaByType(int typeId);
         Result<List<Media>> GetAllArchivedMedia();
         Result<List<Media>> GetUnarchivedMediaByType(int typeID);
-        Result<List<MediaCheckoutCount>> GetTop3MostPopularMedia();
+        Result<List<Top3Media>> GetTop3MostPopularMedia();
         Result<Media> GetMediaByID(int mediaID);
         Result<int> AddMedia(Media newMedia);
         Result ArchiveMedia(int mediaID);

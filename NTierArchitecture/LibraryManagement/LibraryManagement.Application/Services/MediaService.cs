@@ -32,15 +32,9 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                var isArchived = _mediaRepo.Archive(mediaID);
-                if (isArchived)
-                {
-                    return ResultFactory.Success();
-                }
-                else
-                {
-                    return ResultFactory.Fail("Archive attempt failed.");
-                }
+                _mediaRepo.Archive(mediaID);
+
+                return ResultFactory.Success();
             }
             catch (Exception ex)
             {
@@ -52,9 +46,9 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                return _mediaRepo.Update(request)
-                    ? ResultFactory.Success()
-                    : ResultFactory.Fail("Update attempt failed.");
+                _mediaRepo.Update(request);
+
+                return ResultFactory.Success();
             }
             catch (Exception ex)
             {
@@ -84,14 +78,10 @@ namespace LibraryManagement.Application.Services
             try
             {
                 var media = _mediaRepo.GetByID(mediaID);
-                if (media != null)
-                {
-                    return ResultFactory.Success(media);
-                }
-                else
-                {
-                    return ResultFactory.Fail<Media>($"Media with ID {mediaID} not found");
-                }
+
+                return media != null
+                    ? ResultFactory.Success(media)
+                    : ResultFactory.Fail<Media>($"Media with ID {mediaID} not found");
             }
             catch (Exception ex)
             {
@@ -105,14 +95,9 @@ namespace LibraryManagement.Application.Services
             {
                 var list = _mediaRepo.GetByType(typeId);
 
-                if (list.Any())
-                {
-                    return ResultFactory.Success(list);
-                }
-                else
-                {
-                    return ResultFactory.Fail<List<Media>>("Media of this type not found.");
-                }
+                return list.Any()
+                    ? ResultFactory.Success(list)
+                    : ResultFactory.Fail<List<Media>>("Media of this type not found.");
             }
             catch (Exception ex)
             {
@@ -120,7 +105,7 @@ namespace LibraryManagement.Application.Services
             }
         }
 
-        public Result<List<MediaCheckoutCount>> GetTop3MostPopularMedia()
+        public Result<List<Top3Media>> GetTop3MostPopularMedia()
         {
             try
             {
@@ -128,12 +113,11 @@ namespace LibraryManagement.Application.Services
 
                 return list.Any()
                     ? ResultFactory.Success(list)
-                    : ResultFactory.Fail<List<MediaCheckoutCount>>("Top 3 Most Popular Media not found.");
-                    
+                    : ResultFactory.Fail<List<Top3Media>>("Top 3 Most Popular Media not found.");   
             }
             catch (Exception ex)
             {
-                return ResultFactory.Fail<List<MediaCheckoutCount>>(ex.Message);
+                return ResultFactory.Fail<List<Top3Media>>(ex.Message);
             }
         }
 
@@ -142,14 +126,10 @@ namespace LibraryManagement.Application.Services
             try
             {
                 var list = _mediaRepo.GetUnarchivedByType(typeID);
-                if (list != null)
-                {
-                    return ResultFactory.Success(list);
-                }
-                else
-                {
-                    return ResultFactory.Fail<List<Media>>("No unarchived media of this type is found.");
-                }
+
+                return list.Any()
+                    ? ResultFactory.Success(list)
+                    : ResultFactory.Fail<List<Media>>("No unarchived media of this type is found.");
             }
             catch (Exception ex)
             {
