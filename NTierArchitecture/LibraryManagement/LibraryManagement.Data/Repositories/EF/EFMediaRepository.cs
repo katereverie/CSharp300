@@ -105,5 +105,10 @@ namespace LibraryManagement.Data.Repositories.EF
                              .Take(3)
                              .ToList();
         }
+
+        public List<MediaType> GetAllMediaTypes()
+        {
+            return _dbContext.MediaType.ToList();
+        }
     }
 }

@@ -83,6 +83,18 @@ namespace LibraryManagement.Data.Repositories.Dapper
             return list;
         }
 
+        public List<MediaType> GetAllMediaTypes()
+        {
+            using (var cn = new SqlConnection(_cnString))
+            {
+                var command = @"SELECT * FROM MediaType";
+
+                var list = cn.Query<MediaType>(command).ToList();
+
+                return list;
+            }
+        }
+
         public List<Media> GetAllUnarchived()
         {
             List<Media> list = new();
@@ -160,25 +172,27 @@ namespace LibraryManagement.Data.Repositories.Dapper
 
         public List<Media> GetUnarchivedByType(int mediaTypeID)
         {
-            List<Media> media = new();
-
-            try
+            using (var cn = new SqlConnection(_cnString))
             {
-                using (var cn = new SqlConnection(_cnString))
-                {
-                    var command = @"SELECT * 
-                                    FROM Media 
-                                    WHERE IsArchived = 0 AND MediaTypeID = @MediaTypeID";
+                var command = @"SELECT m.*, mt.* 
+                                FROM Media m
+                                INNER JOIN MediaType mt ON mt.MediaTypeID = m.MediaTypeID
+                                WHERE m.IsArchived = 0 
+                                AND m.MediaTypeID = @MediaTypeID";
 
-                    media = cn.Query<Media>(command, new { MediaTypeID = mediaTypeID }).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+                var media = cn.Query<Media, MediaType, Media>(
+                    command, 
+                    (m, mt) =>
+                    {
+                        m.MediaType = mt;
+                        return m;
+                    },
+                    new { mediaTypeID },
+                    splitOn: "MediaTypeID"
+                ).ToList();
 
-            return media;
+                return media;
+            }
         }
 
         public void Update(Media request)

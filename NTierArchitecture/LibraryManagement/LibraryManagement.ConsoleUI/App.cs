@@ -88,7 +88,7 @@ namespace LibraryManagement.ConsoleUI
                 switch (choice)
                 {
                     case 1:
-                        MediaWorkflows.ListAllMedia(_serviceFactory.CreateMediaService());
+                        MediaWorkflows.ListMedia(_serviceFactory.CreateMediaService());
                         break;
                     case 2:
                         MediaWorkflows.AddMedia(_serviceFactory.CreateMediaService());

@@ -73,6 +73,22 @@ namespace LibraryManagement.Application.Services
             }
         }
 
+        public Result<List<MediaType>> GetAllMediaTypes()
+        {
+            try
+            {
+                var list = _mediaRepo.GetAllMediaTypes();
+
+                return list.Any()
+                    ? ResultFactory.Success(list)
+                    : ResultFactory.Fail<List<MediaType>>("Currently, there is not registered media type.");
+            }
+            catch (Exception ex)
+            {
+                return ResultFactory.Fail<List<MediaType>>(ex.Message);
+            }
+        }
+
         public Result<Media> GetMediaByID(int mediaID)
         {
             try
