@@ -137,7 +137,7 @@ namespace LibraryManagement.ConsoleUI.IO
                 Console.WriteLine(getResult.Message);
             }
 
-            int mediaId = Utilities.GetPositiveInteger("Enter the ID of the media you'd like to edit: ");
+            int mediaId = Utilities.GetPositiveInteger("\nEnter the ID of the media you'd like to edit: ");
 
             var verificationResult = service.GetMediaByID(mediaId);
             if (verificationResult.Ok && verificationResult.Data != null)
