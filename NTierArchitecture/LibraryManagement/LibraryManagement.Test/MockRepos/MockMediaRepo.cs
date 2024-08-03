@@ -147,25 +147,25 @@ namespace LibraryManagement.Test.MockRepos
             return _medias.FindAll(m => m.MediaTypeID == mediaTypeID);
         }
 
-        public List<MediaCheckoutCount> GetTopThreeMostPopularMedia()
+        public List<Top3Media> GetTopThreeMostPopularMedia()
         {
-            List<MediaCheckoutCount> list = new List<MediaCheckoutCount>
+            List<Top3Media> list = new List<Top3Media>
             {
-                new MediaCheckoutCount
+                new Top3Media
                 {
                     MediaID = 1,
                     MediaTypeName = "Book",
                     Title = "Book 1",
                     CheckoutCount = 1
                 },
-                new MediaCheckoutCount
+                new Top3Media
                 {
                     MediaID = 2,
                     MediaTypeName = "DVD",
                     Title = "DVD 1",
                     CheckoutCount = 1
                 },
-                new MediaCheckoutCount
+                new Top3Media
                 {
                     MediaID = 3,
                     MediaTypeName = "Digital Audio",
