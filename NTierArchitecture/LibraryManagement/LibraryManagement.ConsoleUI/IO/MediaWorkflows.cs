@@ -10,41 +10,34 @@ namespace LibraryManagement.ConsoleUI.IO
             Console.Clear();
 
             Menus.DisplayMediaType();
-            int input = 0;
+            int choice;
 
             do
             {
-                input = Utilities.GetPositiveInteger("Enter media type ID (1-3) or return (4): ");
-                if (input == 4)
+                int input = Utilities.GetPositiveInteger("Enter media type ID (1-3) or return (4): ");
+
+                if (input >= 1 && input <= 4)
                 {
-                    return;
-                }
-                else if (input >= 1 && input <= 3)
-                {
+                    choice = input;
                     break;
                 }
-
                 Console.WriteLine("Invalid media type ID.");
             } while (true);
 
-            Console.WriteLine($"\n{"Media ID",-10} {"Type",-15} {"Title",-35} {"Status",-60}");
-            Console.WriteLine(new string('=', 100));
-
-            var result = service.GetMediaByType(input);
-
-            if (result.Ok && result.Data != null)
+            if (choice == 4)
             {
-                foreach (var m in result.Data)
-                {
-                    Console.WriteLine($"{m.MediaID,-10} " +
-                                      $"{m.MediaTypeID,-15} " +
-                                      $"{m.Title,-35} " +
-                                      $"{(m.IsArchived ? "Archived" : "Available"),-60}");
-                }
+                return;
+            }
+
+            var result = service.GetMediaByType(choice);
+
+            if (!result.Ok)
+            {
+                Console.WriteLine(result.Message);
             }
             else
             {
-                Console.WriteLine(result.Message);
+                Utilities.PrintMediaList(result.Data);
             }
 
             Utilities.AnyKey();
