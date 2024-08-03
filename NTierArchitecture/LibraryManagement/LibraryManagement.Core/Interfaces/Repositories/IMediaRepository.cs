@@ -5,14 +5,14 @@ namespace LibraryManagement.Core.Interfaces.Repositories
     public interface IMediaRepository
     {
         int Add(Media newMedia);
-        bool Update(Media request);
-        bool Archive(int mediaID);
+        void Update(Media request);
+        void Archive(int mediaID);
         List<Media> GetAll();
         List<Media> GetAllUnarchived();
         List<Media> GetUnarchivedByType(int typeID);
         List<Media> GetAllArchived();
         List<Media> GetByType(int mediaTypeID);
-        List<MediaCheckoutCount> GetTopThreeMostPopularMedia();
+        List<Top3Media> GetTopThreeMostPopularMedia();
         Media? GetByID(int mediaId);  
     }
 }

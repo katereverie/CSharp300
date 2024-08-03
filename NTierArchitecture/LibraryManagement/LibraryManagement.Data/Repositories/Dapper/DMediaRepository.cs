@@ -30,19 +30,12 @@ namespace LibraryManagement.Data.Repositories.Dapper
                     newMedia.Title,
                     newMedia.IsArchived
                 };
-                try
-                {
-                    return cn.ExecuteScalar<int>(command, parameters);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error in Add method: {ex.Message}");
-                    return -1;
-                }
+
+                return cn.ExecuteScalar<int>(command, parameters);
             }
         }
 
-        public bool Archive(int mediaID)
+        public void Archive(int mediaID)
         {
             using (var cn = new SqlConnection(_cnString))
             {
@@ -56,16 +49,7 @@ namespace LibraryManagement.Data.Repositories.Dapper
                     mediaID
                 };
 
-                try
-                {
-                    cn.Execute(command, parameters);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    return false;
-                }
+                cn.Execute(command, parameters);
             }
         }
 
@@ -73,19 +57,12 @@ namespace LibraryManagement.Data.Repositories.Dapper
         {
             List<Media> list = new();
 
-            try
+            using (var cn = new SqlConnection(_cnString))
             {
-                using (var cn = new SqlConnection(_cnString))
-                {
-                    var command = "SELECT * FROM Media";
-                    list = cn.Query<Media>(command).ToList();
-                }
+                var command = "SELECT * FROM Media";
+                list = cn.Query<Media>(command).ToList();
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
+            
             return list;
         }
 
@@ -93,21 +70,14 @@ namespace LibraryManagement.Data.Repositories.Dapper
         {
             List<Media> list = new();
 
-            try
+            using (var cn = new SqlConnection(_cnString))
             {
-                using (var cn = new SqlConnection(_cnString))
-                {
-                    var command = @"SELECT MediaTypeID, Title
-                                    FROM Media
-                                    WHERE IsArchived = 1
-                                    ORDER BY MediaTypeID, Title";
+                var command = @"SELECT MediaTypeID, Title
+                                FROM Media
+                                WHERE IsArchived = 1
+                                ORDER BY MediaTypeID, Title";
 
-                    list = cn.Query<Media>(command).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
+                list = cn.Query<Media>(command).ToList();
             }
 
             return list;
@@ -117,20 +87,13 @@ namespace LibraryManagement.Data.Repositories.Dapper
         {
             List<Media> list = new();
 
-            try
+            using (var cn = new SqlConnection(_cnString))
             {
-                using (var cn = new SqlConnection(_cnString))
-                {
-                    var command = @"SELECT * 
-                                    FROM Media
-                                    WHERE IsArchived = 0";
+                var command = @"SELECT * 
+                                FROM Media
+                                WHERE IsArchived = 0";
 
-                    list = cn.Query<Media>(command).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
+                list = cn.Query<Media>(command).ToList();
             }
 
             return list;
@@ -138,22 +101,15 @@ namespace LibraryManagement.Data.Repositories.Dapper
 
         public Media? GetByID(int mediaID)
         {
-            Media? media = new();
+            Media? media;
 
-            try
+            using (var cn = new SqlConnection(_cnString))
             {
-                using (var cn = new SqlConnection(_cnString))
-                {
-                    var command = @"SELECT * 
-                                    FROM Media 
-                                    WHERE MediaID = @MediaID";
+                var command = @"SELECT * 
+                                FROM Media 
+                                WHERE MediaID = @MediaID";
 
-                    media = cn.QueryFirstOrDefault<Media>(command, new { MediaID = mediaID});
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
+                media = cn.QueryFirstOrDefault<Media>(command, new { mediaID});
             }
 
             return media;
@@ -161,48 +117,42 @@ namespace LibraryManagement.Data.Repositories.Dapper
 
         public List<Media> GetByType(int mediaTypeID)
         {
-            List<Media> media = new();
-
-            try
+            using (var cn = new SqlConnection(_cnString))
             {
-                using (var cn = new SqlConnection(_cnString))
-                {
-                    var command = @"SELECT * 
-                                    FROM Media 
-                                    WHERE MediaTypeID = @MediaTypeID";
+                var command = @"SELECT * 
+                                FROM Media m
+                                INNER JOIN MediaType mt On mt.MediaTypeID = m.MediaTypeID
+                                WHERE m.MediaTypeID = @MediaTypeID";
 
-                    media = cn.Query<Media>(command, new { MediaTypeID = mediaTypeID }).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+                var media = cn.Query<Media, MediaType, Media>(
+                    command, 
+                    (m, mt) =>
+                    {
+                        m.MediaType = mt;
+                        return m;
+                    },
+                    new { mediaTypeID },
+                    splitOn: "MediaTypeID"
+                ).ToList();
 
-            return media;
+                return media;
+            }
         }
 
-        public List<MediaCheckoutCount> GetTopThreeMostPopularMedia()
+        public List<Top3Media> GetTopThreeMostPopularMedia()
         {
-            List<MediaCheckoutCount> list = new();
+            List<Top3Media> list = new();
 
-            try
+            using (var cn = new SqlConnection(_cnString))
             {
-                using (var cn = new SqlConnection(_cnString))
-                {
-                    var command = @"SELECT TOP 3 m.MediaID, m.Title, mt.MediaTypeName, COUNT(cl.MediaID) AS CheckoutCount
-                                    FROM Media m 
-                                    INNER JOIN MediaType mt ON mt.MediaTypeID = m.MediaTypeID
-                                    LEFT JOIN CheckoutLog cl ON cl.MediaID = m.MediaID
-                                    GROUP BY m.MediaID, m.Title, mt.MediaTypeName
-                                    ORDER BY CheckoutCount DESC";
+                var command = @"SELECT TOP 3 m.MediaID, m.Title, mt.MediaTypeName, COUNT(cl.MediaID) AS CheckoutCount
+                                FROM Media m 
+                                INNER JOIN MediaType mt ON mt.MediaTypeID = m.MediaTypeID
+                                LEFT JOIN CheckoutLog cl ON cl.MediaID = m.MediaID
+                                GROUP BY m.MediaID, m.Title, mt.MediaTypeName
+                                ORDER BY CheckoutCount DESC";
 
-                    list = cn.Query<MediaCheckoutCount>(command).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
+                list = cn.Query<Top3Media>(command).ToList();
             }
 
             return list;
@@ -231,34 +181,23 @@ namespace LibraryManagement.Data.Repositories.Dapper
             return media;
         }
 
-        public bool Update(Media request)
+        public void Update(Media request)
         {
-            try
+            using (var cn = new SqlConnection(_cnString))
             {
-                using (var cn = new SqlConnection(_cnString))
+                var command = @"UPDATE [Media] SET
+                                    MediaTypeID = @MediaTypeID,
+                                    Title = @Title
+                            WHERE MediaID = @MediaID";
+                var parameters = new
                 {
-                    var command = @"UPDATE [Media] SET
-                                        MediaTypeID = @MediaTypeID,
-                                        Title = @Title
-                                WHERE MediaID = @MediaID";
-                    var parameters = new
-                    {
-                        request.MediaTypeID,
-                        request.Title,
-                        request.MediaID,
-                    };
+                    request.MediaTypeID,
+                    request.Title,
+                    request.MediaID,
+                };
 
-                    cn.Execute(command, parameters);
-                }
-
-                return true;
+                cn.Execute(command, parameters);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
-
         }
     }
 }

@@ -21,7 +21,7 @@ namespace LibraryManagement.Data.Repositories.EF
             return newMedia.MediaID;
         }
 
-        public bool Update(Media request)
+        public void Update(Media request)
         {
             var media = _dbContext.Media.FirstOrDefault(m => m.MediaID == request.MediaID);
 
@@ -31,13 +31,10 @@ namespace LibraryManagement.Data.Repositories.EF
                 media.MediaTypeID = request.MediaTypeID;
 
                 _dbContext.SaveChanges();
-                return true;
             }
-
-            return false;
         }
 
-        public bool Archive(int mediaID)
+        public void Archive(int mediaID)
         {
             var media = _dbContext.Media.FirstOrDefault(m => m.MediaID == mediaID);
 
@@ -46,11 +43,6 @@ namespace LibraryManagement.Data.Repositories.EF
                 media.IsArchived = true;
 
                 _dbContext.SaveChanges();
-                return true;
-            }
-            else
-            {
-                return false;
             }
         }
 
@@ -67,6 +59,7 @@ namespace LibraryManagement.Data.Repositories.EF
         public List<Media> GetByType(int typeId)
         {
             return _dbContext.Media
+                             .Include(m => m.MediaType)
                              .Where(m => m.MediaTypeID == typeId)
                              .ToList();
         }
@@ -95,13 +88,13 @@ namespace LibraryManagement.Data.Repositories.EF
                              .ToList();
         }
 
-        public List<MediaCheckoutCount> GetTopThreeMostPopularMedia()
+        public List<Top3Media> GetTopThreeMostPopularMedia()
         {
             return _dbContext.Media
                              .Include(m => m.MediaType)
                              .Include(m => m.CheckoutLogs)
                              .Where(m => m.MediaType != null && m.CheckoutLogs != null)
-                             .Select(m => new MediaCheckoutCount
+                             .Select(m => new Top3Media
                                              {
                                                  MediaID = m.MediaID,
                                                  Title = m.Title,

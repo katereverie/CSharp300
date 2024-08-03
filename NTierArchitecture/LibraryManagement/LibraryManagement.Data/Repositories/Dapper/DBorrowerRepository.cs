@@ -41,30 +41,22 @@ namespace LibraryManagement.Data.Repositories.Dapper
             }
         }
 
-        public bool Delete(Borrower borrower)
+        public void Delete(Borrower borrower)
         {
             using (var cn = new SqlConnection(_cnString))
             {
                 cn.Open();
+
                 using (var transaction = cn.BeginTransaction())
                 {
-                    try
-                    {
-                        var deleteCheckoutLogsCommand = "DELETE FROM CheckoutLog WHERE BorrowerID = @BorrowerID";
-                        cn.Execute(deleteCheckoutLogsCommand, new { borrower.BorrowerID }, transaction);
 
-                        var deleteBorrowerCommand = "DELETE FROM Borrower WHERE BorrowerID = @BorrowerID";
-                        cn.Execute(deleteBorrowerCommand, new { borrower.BorrowerID }, transaction);
+                    var deleteCheckoutLogsCommand = "DELETE FROM CheckoutLog WHERE BorrowerID = @BorrowerID";
+                    cn.Execute(deleteCheckoutLogsCommand, new { borrower.BorrowerID }, transaction);
 
-                        transaction.Commit();
-                        return true;
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        Console.WriteLine(ex.Message);
-                        return false;
-                    }
+                    var deleteBorrowerCommand = "DELETE FROM Borrower WHERE BorrowerID = @BorrowerID";
+                    cn.Execute(deleteBorrowerCommand, new { borrower.BorrowerID }, transaction);
+
+                    transaction.Commit();
                 }
             }
         }
@@ -73,17 +65,11 @@ namespace LibraryManagement.Data.Repositories.Dapper
         {
             List<Borrower> list = new List<Borrower>();
 
-            try
+
+            using (var cn = new SqlConnection(_cnString))
             {
-                using (var cn = new SqlConnection(_cnString))
-                {
-                    var command = "SELECT * FROM Borrower";
-                    list = cn.Query<Borrower>(command).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
+                var command = "SELECT * FROM Borrower";
+                list = cn.Query<Borrower>(command).ToList();
             }
 
             return list;
@@ -93,22 +79,16 @@ namespace LibraryManagement.Data.Repositories.Dapper
         {
             Borrower? borrower = null;
 
-            try
-            {
-                using (var cn = new SqlConnection(_cnString))
-                {
-                    var command = @"SELECT *
-                                  FROM Borrower
-                                  WHERE Email = @Email";
 
-                    borrower = cn.QueryFirstOrDefault<Borrower>(command, new { Email = email });
-                }
-            }
-            catch (Exception ex)
+            using (var cn = new SqlConnection(_cnString))
             {
-                Console.WriteLine(ex.Message);
-            }
+                var command = @"SELECT *
+                                FROM Borrower
+                                WHERE Email = @Email";
 
+                borrower = cn.QueryFirstOrDefault<Borrower>(command, new { Email = email });
+            }
+            
             return borrower;
         }
 
@@ -116,38 +96,32 @@ namespace LibraryManagement.Data.Repositories.Dapper
         {
             List<CheckoutLog> logList = new List<CheckoutLog>();  
 
-            try
-            {
-                using (var cn = new SqlConnection(_cnString))
-                {
-                    var command = @"SELECT cl.CheckoutLogID, cl.BorrowerID, cl.MediaID, cl.CheckoutDate, cl.DueDate, cl.ReturnDate,
-                                           m.MediaID, m.MediaTypeID, m.Title, m.IsArchived
-                                    FROM CheckoutLog cl
-                                    INNER JOIN Media m ON m.MediaID = cl.MediaID
-                                    WHERE cl.BorrowerID = @BorrowerID";
 
-                    logList = cn.Query<CheckoutLog, Media, CheckoutLog>(
-                        command,
-                        (cl, m) =>
-                        {
-                            cl.Media = m;
-                            return cl;
-                        },
-                        new { borrower.BorrowerID },
-                        splitOn: "MediaID"
-                    ).ToList();
-                }
-            }
-            catch (Exception ex)
+            using (var cn = new SqlConnection(_cnString))
             {
-                Console.WriteLine(ex.Message);
+                var command = @"SELECT cl.CheckoutLogID, cl.BorrowerID, cl.MediaID, cl.CheckoutDate, cl.DueDate, cl.ReturnDate,
+                                        m.MediaID, m.MediaTypeID, m.Title, m.IsArchived
+                                FROM CheckoutLog cl
+                                INNER JOIN Media m ON m.MediaID = cl.MediaID
+                                WHERE cl.BorrowerID = @BorrowerID";
+
+                logList = cn.Query<CheckoutLog, Media, CheckoutLog>(
+                    command,
+                    (cl, m) =>
+                    {
+                        cl.Media = m;
+                        return cl;
+                    },
+                    new { borrower.BorrowerID },
+                    splitOn: "MediaID"
+                ).ToList();
             }
+            
 
             return logList;
         }
 
-
-        public bool Update(Borrower request)
+        public void Update(Borrower request)
         {
 
             using (var cn = new SqlConnection(_cnString))
@@ -158,6 +132,7 @@ namespace LibraryManagement.Data.Repositories.Dapper
                                         Email = @Email,
                                         Phone = @Phone
                                 WHERE BorrowerID = @BorrowerID";
+
                 var parameters = new
                 {
                     request.FirstName,
@@ -167,16 +142,7 @@ namespace LibraryManagement.Data.Repositories.Dapper
                     request.BorrowerID
                 };
 
-                try
-                {
-                    cn.Execute(command, parameters);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    return false;
-                }
+                cn.Execute(command, parameters);
             }
         }
     }

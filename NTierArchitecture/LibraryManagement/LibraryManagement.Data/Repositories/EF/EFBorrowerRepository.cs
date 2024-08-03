@@ -22,7 +22,7 @@ namespace LibraryManagement.Data.Repositories.EF
         }
 
 
-        public bool Update(Borrower request)
+        public void Update(Borrower request)
         {
             var borrower = _dbContext.Borrower.FirstOrDefault(b => b.BorrowerID == request.BorrowerID);
 
@@ -33,17 +33,15 @@ namespace LibraryManagement.Data.Repositories.EF
                 borrower.Email = request.Email;
                 borrower.Phone = request.Phone;
 
-                return _dbContext.SaveChanges() != 0;
+                _dbContext.SaveChanges();
             }
-
-            return false;
         }
 
         /// <summary>
         /// Deletes all data associated with the passed in borrowerID.
         /// </summary>
         /// <param name="borrowerID"></param>
-        public bool Delete(Borrower borrower)
+        public void Delete(Borrower borrower)
         {
 
             var checkoutLogs = _dbContext.CheckoutLog.Where(cl => cl.BorrowerID == borrower.BorrowerID);
@@ -56,8 +54,6 @@ namespace LibraryManagement.Data.Repositories.EF
                 _dbContext.RemoveRange(checkoutLogs);
                 _dbContext.SaveChanges();
             }
-
-            return changeCount != 0;
         }
 
         public List<Borrower> GetAll()
