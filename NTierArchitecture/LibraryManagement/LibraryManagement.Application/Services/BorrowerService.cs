@@ -46,9 +46,9 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                return _borrowerRepo.Update(borrower)
-                    ? ResultFactory.Success(borrower)
-                    : ResultFactory.Fail("Edit attempt failed.");
+                _borrowerRepo.Update(borrower);
+                
+                return ResultFactory.Success();
             }
             catch (Exception ex)
             {
@@ -85,9 +85,9 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                return _borrowerRepo.Delete(borrower)
-                    ? ResultFactory.Success()
-                    : ResultFactory.Fail("Delete attempt failed.");
+                _borrowerRepo.Delete(borrower);
+
+                return ResultFactory.Success();
             }
             catch (Exception ex)
             {
