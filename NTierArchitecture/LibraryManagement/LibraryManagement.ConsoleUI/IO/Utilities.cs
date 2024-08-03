@@ -6,7 +6,7 @@ namespace LibraryManagement.ConsoleUI.IO
     {
         public static void AnyKey()
         {
-            Console.Write("\nPress any key to continue...");
+            Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
         }
 
@@ -53,7 +53,7 @@ namespace LibraryManagement.ConsoleUI.IO
         {
             PrintHeader(" Borrower List ");
             Console.WriteLine($"{"ID",-5} {"Name",-32} Email");
-            Console.WriteLine(new string('=', 70));
+            Console.WriteLine(new string('=', 100));
             foreach (var b in list)
             {
                 Console.WriteLine($"{b.BorrowerID,-5} {b.LastName + ", " + b.FirstName,-32} {b.Email}");
@@ -72,6 +72,7 @@ namespace LibraryManagement.ConsoleUI.IO
         {
             PrintHeader(" Checkout Record ");
             Console.WriteLine($"{"Media ID",-10} {"Title",-40} {"Checkout Date",-20} {"Return Date",-20}");
+            Console.WriteLine(new string('=', 100));
             foreach (var cl in logs)
             {
                 Console.WriteLine($"{cl.MediaID,-10} " +
@@ -83,8 +84,8 @@ namespace LibraryManagement.ConsoleUI.IO
 
         public static void PrintHeader(string header)
         {
-            string headerSpace = new string('=', (100 - header.Length) / 2);
-            Console.WriteLine("\n" + headerSpace + header + headerSpace);
+            string headerSpace = new string('-', (100 - header.Length) / 2);
+            Console.WriteLine("\n" + headerSpace + header + headerSpace + "\n");
         }
     }
 }
