@@ -70,11 +70,11 @@ namespace LibraryManagement.Data.Repositories.EF
             return _dbContext.Borrower.FirstOrDefault(b => b.Email == email);
         }
 
-        public List<CheckoutLog>? GetCheckoutLogs(Borrower borrower)
+        public List<CheckoutLog> GetCheckoutLogs(Borrower borrower)
         {
             return _dbContext.CheckoutLog
-                             .Include("Media")
-                             .Include("Borrower")
+                             .Include(cl => cl.Media)
+                             .Include(cl => cl.Borrower)
                              .Where(cl => cl.BorrowerID == borrower.BorrowerID)
                              .ToList();
         }
