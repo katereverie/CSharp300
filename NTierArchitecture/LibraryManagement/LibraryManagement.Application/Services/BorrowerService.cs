@@ -102,7 +102,7 @@ namespace LibraryManagement.Application.Services
             {
                 var list = _borrowerRepo.GetCheckoutLogs(borrower);
 
-                return list is not null
+                return list.Any()
                     ? ResultFactory.Success(list)
                     : ResultFactory.Fail<List<CheckoutLog>>("Borrower has no checkout logs records.");
             }
