@@ -58,6 +58,7 @@ namespace LibraryManagement.ConsoleUI.IO
             {
                 Console.WriteLine($"{b.BorrowerID,-5} {b.LastName + ", " + b.FirstName,-32} {b.Email}");
             }
+            Console.WriteLine();
         }
 
         public static void PrintBorrowerInformation(Borrower borrower)
@@ -66,6 +67,7 @@ namespace LibraryManagement.ConsoleUI.IO
             Console.WriteLine($"Id: {borrower.BorrowerID}");
             Console.WriteLine($"Name: {borrower.LastName}, {borrower.FirstName}");
             Console.WriteLine($"Email: {borrower.Email}");
+            Console.WriteLine();
         }
 
         public static void PrintBorrowerCheckoutLog(List<CheckoutLog> logs)
@@ -79,6 +81,20 @@ namespace LibraryManagement.ConsoleUI.IO
                     $"{cl.Media.Title,-40} " +
                     $"{cl.CheckoutDate,-20:MM/dd/yyyy} " +
                     $"{(cl.ReturnDate == null ? "Unreturned" : cl.ReturnDate),-20:MM/dd/yyyy}");
+            }
+            Console.WriteLine();
+        }
+
+        public static void PrintMediaList(List<Media> list)
+        {
+            PrintHeader($" {list[0].MediaType.MediaTypeName} List ");
+            Console.WriteLine($"{"Media ID", -10} {"Title", -35} {"Status", -15}");
+            Console.WriteLine(new string('=', 100));
+            foreach (var m in list)
+            {
+                Console.WriteLine($"{m.MediaID,-10} " +
+                                  $"{m.Title,-35} " +
+                                  $"{(m.IsArchived ? "Archived" : "Available"),-15}");
             }
         }
 
