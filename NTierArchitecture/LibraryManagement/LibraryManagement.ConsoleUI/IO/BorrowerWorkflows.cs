@@ -14,17 +14,10 @@ namespace LibraryManagement.ConsoleUI.IO
             if (!result.Ok)
             {
                 Console.WriteLine(result.Message);
-                Utilities.AnyKey();
-                return;
             }
-            else if (result.Data is not null && result.Data.Any())
+            else if (result.Data.Any())
             {
-                Console.WriteLine($"{"ID",-5} {"Name",-32} Email");
-                Console.WriteLine(new string('=', 70));
-                foreach (var b in result.Data)
-                {
-                    Console.WriteLine($"{b.BorrowerID,-5} {b.LastName + ", " + b.FirstName,-32} {b.Email}");
-                }
+                Utilities.PrintBorrowerList(result.Data);
             }
             else
             {
@@ -37,41 +30,30 @@ namespace LibraryManagement.ConsoleUI.IO
         public static void ViewBorrower(IBorrowerService service)
         {
             Console.Clear();
-            var email = Utilities.GetRequiredString("Enter borrower email: ");
-            var getBorrowerResult = service.GetBorrower(email);
 
+            var email = Utilities.GetRequiredString("Enter borrower email: ");
+
+            var getBorrowerResult = service.GetBorrower(email);
             if (!getBorrowerResult.Ok)
             {
                 Console.WriteLine(getBorrowerResult.Message);
             }
             else
             {
-                Console.WriteLine($"Id: {getBorrowerResult.Data.BorrowerID}");
-                Console.WriteLine($"Name: {getBorrowerResult.Data.LastName}, {getBorrowerResult.Data.FirstName}");
-                Console.WriteLine($"Email: {getBorrowerResult.Data.Email}");
-
-                var getCheckoutLogsResult = service.GetCheckoutLogsByBorrower(getBorrowerResult.Data);
-                if (!getCheckoutLogsResult.Ok)
-                {
-                    Console.WriteLine(getCheckoutLogsResult.Message);
-                }
-                else 
-                {
-                    Console.WriteLine("Checkout Record");
-                    Console.WriteLine(new string('=', 100));
-                    Console.WriteLine($"{"Media ID",-10} {"Title",-40} {"Checkout Date",-20} {"Return Date",-20}");
-                    foreach (var cl in getCheckoutLogsResult.Data)
-                    {
-                        Console.WriteLine($"{cl.MediaID,-10} " +
-                            $"{cl.Media.Title,-40} " +
-                            $"{cl.CheckoutDate,-20:MM/dd/yyyy} " +
-                            $"{(cl.ReturnDate is null ? "Unreturned" : cl.ReturnDate),-20:MM/dd/yyyy}");
-                    }
-
-                    Console.WriteLine();
-                }
+                Utilities.PrintBorrowerInformation(getBorrowerResult.Data);
             }
 
+
+            var getCheckoutLogsResult = service.GetCheckoutLogsByBorrower(getBorrowerResult.Data);
+            if (!getCheckoutLogsResult.Ok)
+            {
+                Console.WriteLine(getCheckoutLogsResult.Message);
+            }
+            else 
+            {
+                Utilities.PrintBorrowerCheckoutLog(getCheckoutLogsResult.Data);
+            }
+            
             Utilities.AnyKey();
         }
 
