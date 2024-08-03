@@ -49,10 +49,9 @@ namespace LibraryManagement.ConsoleUI.IO
             } while (true);
         }
 
-        public static void PrintBorrowerList(List<Borrower> list, string header = " Borrower List ")
+        public static void PrintBorrowerList(List<Borrower> list)
         {
-            string headerSpace = new string('=', (100 - header.Length) / 2);
-            Console.WriteLine("\n" + headerSpace + header + headerSpace);
+            PrintHeader(" Borrower List ");
             Console.WriteLine($"{"ID",-5} {"Name",-32} Email");
             Console.WriteLine(new string('=', 70));
             foreach (var b in list)
@@ -61,19 +60,17 @@ namespace LibraryManagement.ConsoleUI.IO
             }
         }
 
-        public static void PrintBorrowerInformation(Borrower borrower, string header = " Borrower Information ")
+        public static void PrintBorrowerInformation(Borrower borrower)
         {
-            string headerSpace = new string('=', (100 - header.Length) / 2);
-            Console.WriteLine("\n" + headerSpace + header + headerSpace);
+            PrintHeader(" Borrower Information ");
             Console.WriteLine($"Id: {borrower.BorrowerID}");
             Console.WriteLine($"Name: {borrower.LastName}, {borrower.FirstName}");
             Console.WriteLine($"Email: {borrower.Email}");
         }
 
-        public static void PrintBorrowerCheckoutLog(List<CheckoutLog> logs, string header = " Checkout Record ")
+        public static void PrintBorrowerCheckoutLog(List<CheckoutLog> logs)
         {
-            string headerSpace = new string('=', (100 - header.Length) / 2);
-            Console.WriteLine("\n" + headerSpace + header + headerSpace);
+            PrintHeader(" Checkout Record ");
             Console.WriteLine($"{"Media ID",-10} {"Title",-40} {"Checkout Date",-20} {"Return Date",-20}");
             foreach (var cl in logs)
             {
@@ -82,6 +79,12 @@ namespace LibraryManagement.ConsoleUI.IO
                     $"{cl.CheckoutDate,-20:MM/dd/yyyy} " +
                     $"{(cl.ReturnDate == null ? "Unreturned" : cl.ReturnDate),-20:MM/dd/yyyy}");
             }
-        } 
+        }
+
+        public static void PrintHeader(string header)
+        {
+            string headerSpace = new string('=', (100 - header.Length) / 2);
+            Console.WriteLine("\n" + headerSpace + header + headerSpace);
+        }
     }
 }
