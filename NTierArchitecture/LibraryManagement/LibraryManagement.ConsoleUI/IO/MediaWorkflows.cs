@@ -97,11 +97,11 @@ namespace LibraryManagement.ConsoleUI.IO
                 var mediaList = getResult.Data;
 
                 Utilities.PrintMediaList(mediaList);
-                int mediaID = Utilities.GetMediaID(mediaList);
+                int mediaID = Utilities.GetMediaID(mediaList, "Enter the ID of the media to edit: ");
 
                 var mediaToEdit = mediaList.Find(m => m.MediaID == mediaID);
 
-                mediaToEdit.Title = Utilities.GetRequiredString("Enter title: ");
+                mediaToEdit.Title = Utilities.GetRequiredString("Enter new title: ");
                 mediaToEdit.MediaTypeID = Utilities.GetMediaTypeID(typeList, "Enter new type ID: ");
 
                 var editResult = service.EditMedia(mediaToEdit);
@@ -122,74 +122,39 @@ namespace LibraryManagement.ConsoleUI.IO
         {
             Console.Clear();
 
-            Menus.DisplayMediaType();
-            int type = 0;
-
-            do
+            var getTypeResult = service.GetAllMediaTypes();
+            if (!getTypeResult.Ok)
             {
-                int choice = Utilities.GetPositiveInteger("Enter the type of the media (1-3) to be archived or return (4): ");
-                if (choice == 4)
+                Console.WriteLine(getTypeResult.Message);
+                return;
+            }
+
+            var typeList = getTypeResult.Data;
+            Utilities.PrintMediaTypeList(typeList);
+            int typeID = Utilities.GetMediaTypeID(typeList);
+
+            var getMediaResult = service.GetUnarchivedMediaByType(typeID);
+
+            if (!getMediaResult.Ok)
+            {
+                Console.WriteLine(getMediaResult.Message);
+            }
+            else
+            {
+                var mediaList = getMediaResult.Data;
+                Utilities.PrintMediaList(mediaList);
+                int mediaID = Utilities.GetMediaID(mediaList, "Enter the ID of the media to be archived: ");
+
+                var archiveResult = service.ArchiveMedia(mediaID);
+
+                if (archiveResult.Ok)
                 {
-                    return;
-                }
-                else if (choice >= 1 && choice <= 3)
-                {
-                    type = choice;
-                    break;
+                    Console.WriteLine("Media successfully archived.");
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input.");
+                    Console.WriteLine(archiveResult.Message);
                 }
-
-            } while (true);
-
-            var getResult = service.GetUnarchivedMediaByType(type);
-
-            if (getResult.Data != null && getResult.Ok)
-            {
-                Console.WriteLine($"\n{"Media ID",-10} {"Type",-15} {"Title",-35} {"Status",-60}");
-                Console.WriteLine(new string('=', 100));
-
-                foreach (var m in getResult.Data)
-                {
-                    Console.WriteLine($"{m.MediaID,-10} " +
-                            $"{m.MediaTypeID,-15} " +
-                            $"{m.Title,-35} " +
-                            $"{(m.IsArchived ? "Archived" : "Available"),-60}");
-                }
-            }
-            else
-            {
-                Console.WriteLine(getResult.Message);
-            }
-
-            Console.WriteLine();
-
-            int mediaId = 0;
-            do
-            {
-                int userInput = Utilities.GetPositiveInteger("Enter the ID of the media to be archived: ");
-
-                var verificationResult = service.GetMediaByID(userInput);
-                if (verificationResult.Ok)
-                {
-                    mediaId = userInput;
-                    break;
-                }
-
-                Console.WriteLine(verificationResult.Message);
-            } while (true);
-            
-            var result = service.ArchiveMedia(mediaId);
-
-            if (result.Ok)
-            {
-                Console.WriteLine("Media successfully archived.");
-            }
-            else
-            {
-                Console.WriteLine(result.Message);
             }
 
             Utilities.AnyKey();
@@ -203,14 +168,7 @@ namespace LibraryManagement.ConsoleUI.IO
 
             if (result.Ok)
             {
-                Console.WriteLine($"\n{"Type ID",-10} {"Title",-30}");
-                Console.WriteLine(new string('=', 50));
-
-                foreach (var m in result.Data)
-                {
-                    Console.WriteLine($"{m.MediaTypeID,-10} " +
-                                      $"{m.Title,-3} ");
-                }
+                Utilities.PrintMediaArchive(result.Data);
             }
             else
             {
