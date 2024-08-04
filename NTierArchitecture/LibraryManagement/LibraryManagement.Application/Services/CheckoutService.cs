@@ -79,11 +79,11 @@ namespace LibraryManagement.Application.Services
             }
         }
 
-        public Result<List<Media>> GetAllUncheckedoutUnarchivedMedia()
+        public Result<List<Media>> GetAvailableMedia()
         {
             try
             {
-                var list = _checkoutRepo.GetUncheckedoutUnarchivedMedia();
+                var list = _checkoutRepo.GetAvailableMedia();
 
                 return list.Any() 
                     ? ResultFactory.Success(list)
@@ -101,9 +101,9 @@ namespace LibraryManagement.Application.Services
             {
                 var borrower = _checkoutRepo.GetByEmail(email);
 
-                return borrower is null ?
-                       ResultFactory.Fail<Borrower>($"No Borrower with {email} found.") :
-                       ResultFactory.Success(borrower);
+                return borrower != null
+                    ? ResultFactory.Success(borrower)
+                    : ResultFactory.Fail<Borrower>($"No Borrower with {email} was found.");
             }
             catch (Exception ex)
             {
@@ -111,7 +111,7 @@ namespace LibraryManagement.Application.Services
             }
         }
 
-        public Result<List<CheckoutLogDto>> GetCheckedOutMediaByBorrowerID(int borrowerID)
+        public Result<List<CheckoutLog>> GetCheckedOutMediaByBorrowerID(int borrowerID)
         {
             try
             {
@@ -119,12 +119,12 @@ namespace LibraryManagement.Application.Services
 
                 return list.Any() 
                     ? ResultFactory.Success(list)
-                    : ResultFactory.Fail<List<CheckoutLogDto>>("Borrower hasn't checked out any media.");
+                    : ResultFactory.Fail<List<CheckoutLog>>("Borrower hasn't checked out any media.");
                        
             }
             catch (Exception ex)
             {
-                return ResultFactory.Fail<List<CheckoutLogDto>>(ex.Message);
+                return ResultFactory.Fail<List<CheckoutLog>>(ex.Message);
             }
         }
 
@@ -150,7 +150,7 @@ namespace LibraryManagement.Application.Services
             {
                 var media = _mediaRepo.GetByID(mediaID);
 
-                return media is not null
+                return media != null
                     ? ResultFactory.Success(media)
                     : ResultFactory.Fail<Media>($"No media by ID: {mediaID} found.");      
             }
@@ -164,9 +164,9 @@ namespace LibraryManagement.Application.Services
         {
             try
             {
-                return _checkoutRepo.Update(checkoutLogID)
-                    ? ResultFactory.Success()
-                    : ResultFactory.Fail("Return attempt failed.");
+                _checkoutRepo.Update(checkoutLogID);
+
+                return ResultFactory.Success();
             }
             catch (Exception ex)
             {
