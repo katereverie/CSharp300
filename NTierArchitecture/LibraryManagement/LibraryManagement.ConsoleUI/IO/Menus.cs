@@ -64,17 +64,6 @@
             Console.WriteLine("6. Go back to previous menu\n");
         }
 
-        public static void DisplayMediaType()
-        {
-            Console.WriteLine();
-            Console.WriteLine("Media Types");
-            Console.WriteLine("===========");
-            Console.WriteLine("1. Book");
-            Console.WriteLine("2. DVD");
-            Console.WriteLine("3. Digital Audio");
-            Console.WriteLine("4. Go back to previous menu\n");
-        }
-
         public static void DisplayCheckoutOptions()
         {
             Console.WriteLine();
