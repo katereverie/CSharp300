@@ -208,6 +208,20 @@ namespace LibraryManagement.ConsoleUI.IO
             Console.WriteLine();
         }
 
+        public static void PrintMediaReport(List<Top3Media> list)
+        {
+            PrintHeader(" Top 3 Most Popular Media List ");
+            Console.WriteLine($"\n{"Media ID",-10} {"Type",-20} {"Title",-35} {"Checkout Count",-15}");
+            Console.WriteLine(new string('=', 100));
+            foreach (var m in list)
+            {
+                Console.WriteLine($"{m.MediaID,-10} " +
+                        $"{m.MediaTypeName,-20} " +
+                        $"{m.Title,-35} " +
+                        $"{m.CheckoutCount,-15}");
+            }
+        }
+
         public static void PrintCheckoutLogList(List<CheckoutLog> list)
         {
             PrintHeader($" Checkout Log List");

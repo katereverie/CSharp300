@@ -184,18 +184,10 @@ namespace LibraryManagement.ConsoleUI.IO
 
             var result = service.GetTop3MostPopularMedia();
 
-            if (result.Ok && result.Data != null)
+            if (result.Ok)
             {
-                Console.WriteLine($"\n{"Media ID",-10} {"Type", -20} {"Title", -35} {"Checkout Count",-15}");
-                Console.WriteLine(new string('=',80));
-
-                foreach (var mcc in result.Data)
-                {
-                    Console.WriteLine($"{mcc.MediaID,-10} " +
-                            $"{mcc.MediaTypeName, -20} " +
-                            $"{mcc.Title, -35} " +
-                            $"{mcc.CheckoutCount,-15}");
-                }
+                Utilities.PrintMediaReport(result.Data);
+                
             }
             else
             {
