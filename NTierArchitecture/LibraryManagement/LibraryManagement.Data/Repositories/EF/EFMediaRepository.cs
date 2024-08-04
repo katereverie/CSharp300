@@ -99,7 +99,7 @@ namespace LibraryManagement.Data.Repositories.EF
                                                  MediaID = m.MediaID,
                                                  Title = m.Title,
                                                  MediaTypeName = m.MediaType.MediaTypeName,
-                                                 CheckoutCount = m.CheckoutLogs.Count()
+                                                 CheckoutCount = m.CheckoutLogs != null ? m.CheckoutLogs.Count : 0
                                              })
                              .OrderByDescending(m => m.CheckoutCount)
                              .Take(3)

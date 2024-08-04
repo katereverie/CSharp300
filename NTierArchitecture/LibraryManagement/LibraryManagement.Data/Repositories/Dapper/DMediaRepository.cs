@@ -68,19 +68,16 @@ namespace LibraryManagement.Data.Repositories.Dapper
 
         public List<Media> GetAllArchived()
         {
-            List<Media> list = new();
-
             using (var cn = new SqlConnection(_cnString))
             {
-                var command = @"SELECT MediaTypeID, Title
-                                FROM Media
-                                WHERE IsArchived = 1
-                                ORDER BY MediaTypeID, Title";
+                var command = @"SELECT m.*, mt.*
+                                FROM Media m
+                                INNER JOIN MediaType mt ON mt.MediaTypeID = m.MediaTypeID
+                                WHERE m.IsArchived = 1
+                                ORDER BY m.MediaTypeID, m.Title";
 
-                list = cn.Query<Media>(command).ToList();
+                return cn.Query<Media>(command).ToList();
             }
-
-            return list;
         }
 
         public List<MediaType> GetAllMediaTypes()
@@ -153,8 +150,6 @@ namespace LibraryManagement.Data.Repositories.Dapper
 
         public List<Top3Media> GetTopThreeMostPopularMedia()
         {
-            List<Top3Media> list = new();
-
             using (var cn = new SqlConnection(_cnString))
             {
                 var command = @"SELECT TOP 3 m.MediaID, m.Title, mt.MediaTypeName, COUNT(cl.MediaID) AS CheckoutCount
@@ -164,10 +159,8 @@ namespace LibraryManagement.Data.Repositories.Dapper
                                 GROUP BY m.MediaID, m.Title, mt.MediaTypeName
                                 ORDER BY CheckoutCount DESC";
 
-                list = cn.Query<Top3Media>(command).ToList();
+                return cn.Query<Top3Media>(command).ToList();
             }
-
-            return list;
         }
 
         public List<Media> GetUnarchivedByType(int mediaTypeID)

@@ -37,12 +37,11 @@ namespace LibraryManagement.ConsoleUI.IO
             if (!getBorrowerResult.Ok)
             {
                 Console.WriteLine(getBorrowerResult.Message);
-            }
-            else
-            {
-                Utilities.PrintBorrowerInformation(getBorrowerResult.Data);
+                Utilities.AnyKey();
+                return;
             }
 
+            Utilities.PrintBorrowerInformation(getBorrowerResult.Data);
 
             var getCheckoutLogsResult = service.GetCheckoutLogsByBorrower(getBorrowerResult.Data);
             if (!getCheckoutLogsResult.Ok)
@@ -61,12 +60,13 @@ namespace LibraryManagement.ConsoleUI.IO
         {
             Console.Clear();
 
-            Borrower newBorrower = new Borrower();
-
-            newBorrower.FirstName = Utilities.GetRequiredString("First Name: ");
-            newBorrower.LastName = Utilities.GetRequiredString("Last Name: ");
-            newBorrower.Email = Utilities.GetRequiredString("Email: ");
-            newBorrower.Phone = Utilities.GetRequiredString("Phone: ");
+            Borrower newBorrower = new Borrower
+            {
+                FirstName = Utilities.GetRequiredString("First Name: "),
+                LastName = Utilities.GetRequiredString("Last Name: "),
+                Email = Utilities.GetRequiredString("Email: "),
+                Phone = Utilities.GetRequiredString("Phone: ")
+            };
 
             var addResult = service.AddBorrower(newBorrower);
 
