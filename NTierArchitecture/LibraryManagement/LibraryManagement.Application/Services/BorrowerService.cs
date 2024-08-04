@@ -32,9 +32,9 @@ namespace LibraryManagement.Application.Services
             {
                 var borrower = _borrowerRepo.GetByEmail(email);
 
-                return borrower is null ?
-                    ResultFactory.Fail<Borrower>($"Borrower registered with {email} not found!") :
-                    ResultFactory.Success(borrower);
+                return borrower != null
+                    ? ResultFactory.Success(borrower)
+                    : ResultFactory.Fail<Borrower>($"No Borrower registered with {email} was found.");
             }
             catch (Exception ex)
             {
