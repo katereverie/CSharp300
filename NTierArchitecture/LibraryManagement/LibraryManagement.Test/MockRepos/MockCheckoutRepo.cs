@@ -5,7 +5,7 @@ namespace LibraryManagement.Test.MockRepos
 {
     public class MockCheckoutRepo : ICheckoutRepository
     {
-        private List<CheckoutLog> _checkoutLogs = new List<CheckoutLog>
+        private List<CheckoutLog> _logs = new List<CheckoutLog>
         {
             new CheckoutLog
             {
@@ -14,22 +14,7 @@ namespace LibraryManagement.Test.MockRepos
                 MediaID = 1,
                 CheckoutDate = DateTime.Today,
                 DueDate = DateTime.Today.AddDays(7),
-                ReturnDate = null,
-                Borrower = new Borrower
-                {
-                    BorrowerID = 1,
-                    FirstName = "John",
-                    LastName = "Doe",
-                    Email = "john.doe@example.com",
-                    Phone = "1667777555",
-                },
-                Media = new Media
-                {
-                    MediaID = 1,
-                    MediaTypeID = 1,
-                    Title = "Book 1",
-                    IsArchived = false
-                }
+                ReturnDate = null
             },
             new CheckoutLog
             {
@@ -38,140 +23,71 @@ namespace LibraryManagement.Test.MockRepos
                 MediaID = 2,
                 CheckoutDate = DateTime.Today,
                 DueDate = DateTime.Today.AddDays(7),
-                ReturnDate = null,
-                Borrower = new Borrower
-                {
-                    BorrowerID = 1,
-                    FirstName = "John",
-                    LastName = "Doe",
-                    Email = "john.doe@example.com",
-                    Phone = "1667777555",
-                },
-                Media = new Media
-                {
-                    MediaID = 2,
-                    MediaTypeID = 2,
-                    Title = "DVD 1",
-                    IsArchived = false,
-                }
+                ReturnDate = null
             },
             new CheckoutLog
             {
-                CheckoutLogID= 3,
+                CheckoutLogID = 3,
                 BorrowerID = 1,
                 MediaID = 3,
                 CheckoutDate = DateTime.Today,
                 DueDate = DateTime.Today.AddDays(7),
-                ReturnDate = null,
-                Borrower = new Borrower
-                {
-                    BorrowerID = 1,
-                    FirstName = "John",
-                    LastName = "Doe",
-                    Email = "john.doe@example.com",
-                    Phone = "1667777555",
-                },
-                Media = new Media
-                {
-                    MediaID= 3,
-                    MediaTypeID = 3,
-                    Title = "Digital Audio 1",
-                    IsArchived = false,
-                }
+                ReturnDate = null
             },
             new CheckoutLog
             {
                 CheckoutLogID = 4,
-                BorrowerID = 3,
+                BorrowerID = 2,
                 MediaID = 4,
+                CheckoutDate = DateTime.Today,
+                DueDate = DateTime.Today.AddDays(7),
+                ReturnDate = null
+            },
+            new CheckoutLog
+            {
+                CheckoutLogID = 5,
+                BorrowerID = 3,
+                MediaID = 5,
                 CheckoutDate = new DateTime(2024, 1, 1),
                 DueDate = new DateTime(2024, 1, 1).AddDays(7),
-                ReturnDate = null,
-                Borrower = new Borrower
-                {
-                    BorrowerID = 3,
-                    FirstName = "Issac",
-                    LastName = "Doe",
-                    Email = "issac.doe@example.com",
-                    Phone = "1776666555",
-                }
+                ReturnDate = null
             }
+
         };
+
+        public List<CheckoutLog> GetCheckoutLogsByBorrowerID(int borrowerID)
+        {
+            return _logs.FindAll(cl => cl.BorrowerID == borrowerID);
+        }
 
         public int Add(CheckoutLog newCheckoutLog)
         {
-            _checkoutLogs.Add(newCheckoutLog);
-
-            return _checkoutLogs.Last().CheckoutLogID;
+            throw new NotImplementedException();
         }
 
         public List<CheckoutLog> GetAllCheckedoutMedia()
         {
-            return _checkoutLogs.FindAll(cl => cl.ReturnDate == null);
-        }
-
-        public Borrower? GetByEmail(string email)
-        {
-            var log = _checkoutLogs.Find(cl => cl.Borrower.Email == email);
-
-            if (log != null)
-            {
-                return log.Borrower;
-            }
-
-            return null;
-        }
-
-        public List<CheckoutLog> GetCheckedoutMediaByBorrowerID(int borrowerID)
-        {
-            List<CheckoutLog> list = new List<CheckoutLog>();
-
-            var logs = _checkoutLogs.FindAll(cl => cl.ReturnDate == null && cl.BorrowerID == borrowerID);
-            if (logs != null) 
-            {
-                foreach (var cl in logs)
-                {
-                    list.Add(new CheckoutLog
-                    {
-                        CheckoutLogID = cl.BorrowerID,
-                        Media = cl.Media
-                    });
-                }
-            }
-
-            return list;
-        }
-
-        public List<CheckoutLog> GetCheckoutLogsByBorrowerID(int borrowerID)
-        {
-            return _checkoutLogs.FindAll(cl => cl.BorrowerID == borrowerID);
+            throw new NotImplementedException();
         }
 
         public List<Media> GetAvailableMedia()
         {
-            List<Media> list = new List<Media>();
+            throw new NotImplementedException();
+        }
 
-            var logs = _checkoutLogs.FindAll(cl => cl.ReturnDate != null && !cl.Media.IsArchived);
-            if (logs.Any())
-            {
-                foreach (var cl in logs)
-                {
-                    list.Add(cl.Media);
-                }
-            }
+        public Borrower? GetByEmail(string email)
+        {
+            throw new NotImplementedException();
+        }
 
-            return list;
+        public List<CheckoutLog> GetCheckedoutMediaByBorrowerID(int borrowerID)
+        {
+            throw new NotImplementedException();
         }
 
         public void Update(int checkoutLogID)
         {
-            var log = _checkoutLogs.Find(m => m.CheckoutLogID == checkoutLogID);
-
-            if (log != null)
-            {
-                int index = _checkoutLogs.IndexOf(log);
-                _checkoutLogs[index].ReturnDate = DateTime.Today;
-            } 
+            throw new NotImplementedException();
         }
     }
 }

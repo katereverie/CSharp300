@@ -5,133 +5,47 @@ namespace LibraryManagement.Test.MockRepos
 {
     public class MockBorrowerRepo : IBorrowerRepository
     {
-        private List<Borrower> _borrowers = new List<Borrower>
+        private List<Borrower> _repo = new List<Borrower>
         {
             new Borrower
             {
                 BorrowerID = 1,
-                FirstName = "John",
-                LastName = "Doe",
-                Email = "john.doe@example.com",
-                Phone = "1667777555",
-                CheckoutLogs = new List<CheckoutLog>
-                {
-                    new CheckoutLog
-                    {
-                        CheckoutLogID = 1,
-                        BorrowerID = 1,
-                        MediaID = 1,
-                        CheckoutDate = DateTime.Today,
-                        DueDate = DateTime.Today.AddDays(7),
-                        ReturnDate = null,
-                    },
-                    new CheckoutLog
-                    {
-                        CheckoutLogID = 2,
-                        BorrowerID = 1,
-                        MediaID = 2,
-                        CheckoutDate = DateTime.Today,
-                        DueDate = DateTime.Today.AddDays(7),
-                        ReturnDate = null,
-                    },
-                    new CheckoutLog
-                    {
-                        CheckoutLogID= 3,
-                        BorrowerID = 1,
-                        MediaID = 3,
-                        CheckoutDate = DateTime.Today,
-                        DueDate = DateTime.Today.AddDays(7),
-                        ReturnDate = null,
-                    }
-                }
-            },
-                new Borrower
-            {
-                BorrowerID = 2,
-                FirstName = "Jane",
-                LastName = "Doe",
-                Email = "jane.doe@example.com",
-                Phone = "1776666555",
-                CheckoutLogs = null
-            },
-                new Borrower
-            {
-                BorrowerID = 3,
                 FirstName = "Issac",
-                LastName = "Doe",
-                Email = "issac.doe@example.com",
-                Phone = "1776666555",
-                CheckoutLogs = new List<CheckoutLog>
-                {
-                    new CheckoutLog
-                    {
-                        CheckoutLogID = 4,
-                        BorrowerID = 3,
-                        MediaID = 4,
-                        CheckoutDate = new DateTime(2024, 1, 1),
-                        DueDate = new DateTime(2024, 1, 1).AddDays(7),
-                        ReturnDate = null,
-                    },
-                }
-            },
+                LastName = "Test",
+                Email = "issac@test.com",
+                Phone = "9119111911"
+            }
         };
+
+        public Borrower? GetByEmail(string email)
+        {
+            return _repo.Find(b => b.Email == email);
+        }
 
         public int Add(Borrower newBorrower)
         {
-            _borrowers.Add(newBorrower);
-            return _borrowers.Last().BorrowerID;
+            _repo.Add(newBorrower);
+            return _repo.Last().BorrowerID;
         }
 
-        public bool Delete(Borrower borrower)
+        public void Delete(Borrower borrower)
         {
-            return _borrowers.Remove(borrower);
+            throw new NotImplementedException();
         }
 
         public List<Borrower> GetAll()
         {
-            return _borrowers;
+            throw new NotImplementedException();
         }
 
-        public Borrower? GetByEmail(string email)
+        public List<CheckoutLog> GetCheckoutLogs(Borrower borrower)
         {
-            foreach (var b in _borrowers)
-            {
-                if (b.Email == email)
-                {
-                    return b;
-                }
-            }
-
-            return null;
+            throw new NotImplementedException();
         }
 
-        public List<CheckoutLog>? GetCheckoutLogs(Borrower borrower)
+        public void Update(Borrower request)
         {
-            int index = _borrowers.IndexOf(borrower);
-
-            if (index == -1)
-            {
-                return null;
-            }
-            else
-            {
-                return _borrowers[index].CheckoutLogs;
-            }
-        }
-
-        public bool Update(Borrower request)
-        {
-            int index = _borrowers.IndexOf(request);
-
-            if (index == -1)
-            {
-                return false;
-            }
-            else
-            {
-                _borrowers[index] = request;
-                return true;
-            }
+            throw new NotImplementedException();
         }
     }
 }
