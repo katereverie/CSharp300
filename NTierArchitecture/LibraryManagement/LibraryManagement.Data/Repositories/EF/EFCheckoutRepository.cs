@@ -24,20 +24,20 @@ namespace LibraryManagement.Data.Repositories.EF
         public List<CheckoutLog> GetAllCheckedoutMedia()
         {
             return _dbContext.CheckoutLog
-                             .Include("Borrower")
-                             .Include("Media")
+                             .Include(cl => cl.Borrower)
+                             .Include(cl => cl.Media)
                              .Where(cl => cl.ReturnDate == null)
                              .ToList();
         }
 
-        public List<Media> GetUncheckedoutUnarchivedMedia()
+        public List<Media> GetAvailableMedia()
         {
             return _dbContext.Media
                              .Include(m => m.CheckoutLogs)
+                             .Include(m => m.MediaType)
                              .Where(m => !m.IsArchived)
                              .Where(m => !m.CheckoutLogs.Any() ||
-                                         (m.CheckoutLogs.Any() &&
-                                          m.CheckoutLogs.OrderByDescending(cl => cl.CheckoutLogID)
+                                         (m.CheckoutLogs.OrderByDescending(cl => cl.CheckoutLogID)
                                                         .First().ReturnDate != null))
                              .ToList();
         }
@@ -49,32 +49,25 @@ namespace LibraryManagement.Data.Repositories.EF
                              .ToList();
         }
 
-        public List<CheckoutLogDto> GetCheckedoutMediaByBorrowerID (int borrowerID)
+        public List<CheckoutLog> GetCheckedoutMediaByBorrowerID (int borrowerID)
         {
             return _dbContext.CheckoutLog
+                             .Include(cl => cl.Media)
                              .Where(cl => cl.BorrowerID == borrowerID && cl.ReturnDate == null)
-                             .Select(cl => new CheckoutLogDto
-                             {
-                                 CheckoutLogID = cl.CheckoutLogID,
-                                 Title = cl.Media.Title
-                             })
                              .ToList();
         }
 
-        public bool Update(int checkoutLogID)
+        public void Update(int checkoutLogID)
         {
             var checkoutLog = _dbContext.CheckoutLog
                               .FirstOrDefault(cl => cl.CheckoutLogID == checkoutLogID);
 
-            if (checkoutLog is not null)
+            if (checkoutLog != null)
             {
                 checkoutLog.ReturnDate = DateTime.Now;
 
                 _dbContext.SaveChanges();
-                return true;
             }
-            
-            return false;
         }
 
         public Borrower? GetByEmail(string email)

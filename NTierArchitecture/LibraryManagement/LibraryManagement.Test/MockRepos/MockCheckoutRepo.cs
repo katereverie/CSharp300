@@ -122,19 +122,19 @@ namespace LibraryManagement.Test.MockRepos
             return null;
         }
 
-        public List<CheckoutLogDto> GetCheckedoutMediaByBorrowerID(int borrowerID)
+        public List<CheckoutLog> GetCheckedoutMediaByBorrowerID(int borrowerID)
         {
-            List<CheckoutLogDto> list = new List<CheckoutLogDto>();
+            List<CheckoutLog> list = new List<CheckoutLog>();
 
             var logs = _checkoutLogs.FindAll(cl => cl.ReturnDate == null && cl.BorrowerID == borrowerID);
             if (logs != null) 
             {
                 foreach (var cl in logs)
                 {
-                    list.Add(new CheckoutLogDto
+                    list.Add(new CheckoutLog
                     {
                         CheckoutLogID = cl.BorrowerID,
-                        Title = cl.Media.Title
+                        Media = cl.Media
                     });
                 }
             }
@@ -147,7 +147,7 @@ namespace LibraryManagement.Test.MockRepos
             return _checkoutLogs.FindAll(cl => cl.BorrowerID == borrowerID);
         }
 
-        public List<Media> GetUncheckedoutUnarchivedMedia()
+        public List<Media> GetAvailableMedia()
         {
             List<Media> list = new List<Media>();
 
@@ -163,7 +163,7 @@ namespace LibraryManagement.Test.MockRepos
             return list;
         }
 
-        public bool Update(int checkoutLogID)
+        public void Update(int checkoutLogID)
         {
             var log = _checkoutLogs.Find(m => m.CheckoutLogID == checkoutLogID);
 
@@ -171,10 +171,7 @@ namespace LibraryManagement.Test.MockRepos
             {
                 int index = _checkoutLogs.IndexOf(log);
                 _checkoutLogs[index].ReturnDate = DateTime.Today;
-                return true;
             } 
-
-            return false;
         }
     }
 }

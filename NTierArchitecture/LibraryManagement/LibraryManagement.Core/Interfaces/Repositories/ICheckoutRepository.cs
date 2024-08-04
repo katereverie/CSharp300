@@ -4,12 +4,12 @@ namespace LibraryManagement.Core.Interfaces.Repositories
 {
     public interface ICheckoutRepository
     {
-        List<Media> GetUncheckedoutUnarchivedMedia();
+        List<Media> GetAvailableMedia();
         List<CheckoutLog> GetCheckoutLogsByBorrowerID(int borrowerID);
-        List<CheckoutLogDto> GetCheckedoutMediaByBorrowerID(int borrowerID);
+        List<CheckoutLog> GetCheckedoutMediaByBorrowerID(int borrowerID);
         List<CheckoutLog> GetAllCheckedoutMedia();
         Borrower? GetByEmail(string email);
-        bool Update(int checkoutLogID);
+        void Update(int checkoutLogID);
         int Add(CheckoutLog newCheckoutLog);
     }
 }
