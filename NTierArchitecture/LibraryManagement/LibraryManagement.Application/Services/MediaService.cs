@@ -62,10 +62,9 @@ namespace LibraryManagement.Application.Services
             {
                 var list = _mediaRepo.GetAllArchived();
 
-                return list.Any() ?
-                       ResultFactory.Success(list) :
-                       ResultFactory.Fail<List<Media>>("No media is currently archived.");
-                    
+                return list.Any()
+                    ? ResultFactory.Success(list) 
+                    : ResultFactory.Fail<List<Media>>("Currently, there is no archived media.");
             }
             catch (Exception ex)
             {
