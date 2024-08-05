@@ -23,11 +23,6 @@ namespace LibraryManagement.ConsoleUI
 
         public DatabaseMode GetDatabaseMode()
         {
-            if (_configuration["DatabaseMode"] == "")
-            {
-                throw new Exception("DatabaseMode configuration key not found!");
-            }
-
             switch(_configuration["DatabaseMode"])
             {
                 case "ORM":
@@ -35,7 +30,7 @@ namespace LibraryManagement.ConsoleUI
                 case "SQL":
                     return DatabaseMode.DirectSQL;
                 default:
-                    throw new Exception("DatabaseMode configuration key is invalid!");
+                    throw new Exception("DatabaseMode configuration key not found!");
             }
         }
     }
