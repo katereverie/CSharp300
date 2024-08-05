@@ -22,10 +22,8 @@ namespace LibraryManagement.Application
             {
                 case DatabaseMode.ORM:
                     return new BorrowerService(new EFBorrowerRepository(_config.GetConnectionString()));
-                case DatabaseMode.DirectSQL:
-                    return new BorrowerService(new DBorrowerRepository(_config.GetConnectionString()));
                 default:
-                    throw new Exception("DatabaseMode configuration is off.");
+                    return new BorrowerService(new DBorrowerRepository(_config.GetConnectionString()));
             }
         }
 
@@ -35,10 +33,8 @@ namespace LibraryManagement.Application
             {
                 case DatabaseMode.ORM:
                     return new MediaService(new EFMediaRepository(_config.GetConnectionString()));
-                case DatabaseMode.DirectSQL:
-                    return new MediaService(new DMediaRepository(_config.GetConnectionString()));
                 default:
-                    throw new Exception("DatabaseMode configuration is off.");
+                    return new MediaService(new DMediaRepository(_config.GetConnectionString()));
             }  
         }
 
@@ -48,10 +44,8 @@ namespace LibraryManagement.Application
             {
                 case DatabaseMode.ORM:
                     return new CheckoutService(new EFCheckoutRepository(_config.GetConnectionString()), new EFMediaRepository(_config.GetConnectionString()));
-                case DatabaseMode.DirectSQL:
-                    return new CheckoutService(new DCheckoutRepository(_config.GetConnectionString()), new DMediaRepository(_config.GetConnectionString()));
                 default:
-                    throw new Exception("DatabaseMode configuration is off.");
+                    return new CheckoutService(new DCheckoutRepository(_config.GetConnectionString()), new DMediaRepository(_config.GetConnectionString()));
             }
         }
     }
